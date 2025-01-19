@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied</title>
+    <style>
+        body {
+            background: #0F1923;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .error-container {
+            padding: 20px;
+        }
+        h1 {
+            color: #FF4444;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 12px 25px;
+            background: #00FF7F;
+            border: none;
+            border-radius: 5px;
+            color: #0F1923;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #00CC6A;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Access Denied</h1>
+        <p>Developer tools are not allowed on this site.</p>
+        <button onclick="window.location.href='index.html'">Return to Home</button>
+    </div>
+</body>
+</html> 

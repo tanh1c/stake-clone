@@ -141,21 +141,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
-
-    // Ngăn chặn debug
-    setInterval(() => {
-        Function("debugger")();
-    }, 100);
-
-    // Vô hiệu hóa chuột phải
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // Vô hiệu hóa phím tắt debug
-    document.addEventListener('keydown', e => {
-        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
-            e.preventDefault();
-        }
-    });
 });
 
 // API functions

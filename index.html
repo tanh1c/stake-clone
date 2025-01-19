@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/crash.css">
     <link rel="stylesheet" href="css/limbo.css">
     <link rel="stylesheet" href="css/slot.css">
+    <script src="js/protection.js"></script>
 </head>
 <body>
     <div class="container">
@@ -783,28 +784,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/obfuscator.js"></script>
-    <script>
-        // Load và mã hóa các file js
-        const gameScripts = [
-            'dice', 'crash', 'mines', 'roulette', 
-            'plinko', 'blackjack', 'hilo', 
-            'double-dice', 'limbo', 'slot'
-        ];
-
-        gameScripts.forEach(game => {
-            fetch(`js/${game}.js`)
-                .then(response => response.text())
-                .then(code => {
-                    // Mã hóa code
-                    const encodedCode = obfuscateCode(code);
-                    
-                    // Tạo script element với code đã mã hóa
-                    const script = document.createElement('script');
-                    script.textContent = deobfuscateCode(encodedCode);
-                    document.body.appendChild(script);
-                });
-        });
-    </script>
+    <script src="js/dice.js"></script>
+    <script src="js/crash.js"></script>
+    <script src="js/mines.js"></script>
+    <script src="js/roulette.js"></script>
+    <script src="js/plinko.js"></script>
+    <script src="js/blackjack.js"></script>
+    <script src="js/hilo.js"></script>
+    <script src="js/double-dice.js"></script>
+    <script src="js/limbo.js"></script>
+    <script src="js/slot.js"></script>
 </body>
 </html> 
