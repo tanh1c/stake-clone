@@ -1,3 +1,5 @@
+const API_URL = 'https://stake-clone-backend.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -7,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load user data
     try {
-        const response = await fetch('http://localhost:3000/api/profile', {
+        const response = await fetch(`${API_URL}/profile`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/profile/update', {
+            const response = await fetch(`${API_URL}/profile/update`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         formData.append('avatar', file);
 
         try {
-            const response = await fetch('http://localhost:3000/api/profile/avatar', {
+            const response = await fetch(`${API_URL}/profile/avatar`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

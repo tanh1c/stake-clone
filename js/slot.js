@@ -1,3 +1,5 @@
+const API_URL = 'https://stake-clone-backend.onrender.com/api';
+
 const SlotMachine = {
     reels: 3,
     rows: 3,
@@ -242,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Lấy số dư từ server
     try {
-        const response = await fetch('http://localhost:3000/api/balance', {
+        const response = await fetch(`${CrashGame.API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

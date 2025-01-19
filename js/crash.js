@@ -8,6 +8,7 @@ const CrashGame = {
     isAutoCashout: false,
     gameHistory: [],
     chart: null,
+    API_URL: 'https://stake-clone-backend.onrender.com/api',
 
     initialize() {
         const ctx = document.getElementById('crashChart').getContext('2d');
@@ -283,7 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Lấy số dư từ server
     try {
-        const response = await fetch('http://localhost:3000/api/balance', {
+        const response = await fetch(`${CrashGame.API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

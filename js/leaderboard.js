@@ -1,3 +1,5 @@
+const API_URL = 'https://stake-clone-backend.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -6,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/leaderboard', {
+        const response = await fetch(`${API_URL}/leaderboard`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

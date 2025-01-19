@@ -5,6 +5,7 @@ let isGameActive = false;
 let currentBet = 0;
 let currentMultiplier = 1.00;
 let minePositions = [];
+const API_URL = 'https://stake-clone-backend.onrender.com/api';
 
 function initializeMines() {
     minesGrid = [];
@@ -230,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Lấy số dư từ server
     try {
-        const response = await fetch('http://localhost:3000/api/balance', {
+        const response = await fetch(`${CrashGame.API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

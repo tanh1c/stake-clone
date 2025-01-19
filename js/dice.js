@@ -1,3 +1,5 @@
+const API_URL = 'https://stake-clone-backend.onrender.com/api';
+
 let balance;
 let isAutoBetting = false;
 let autoBetInterval = null;
@@ -32,7 +34,7 @@ async function handleLoss(amount) {
 
 async function updateBalance(amount) {
     try {
-        const response = await fetch('http://localhost:3000/api/updateBalance', {
+        const response = await fetch(`${API_URL}/updateBalance`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -404,7 +406,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Lấy số dư từ server
     try {
-        const response = await fetch('http://localhost:3000/api/balance', {
+        const response = await fetch(`${API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
