@@ -1,5 +1,3 @@
-const API_URL = 'https://stake-clone-backend.onrender.com/api';
-
 let balance;
 let isAutoBetting = false;
 let autoBetInterval = null;

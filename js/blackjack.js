@@ -1,5 +1,3 @@
-const API_URL = 'https://stake-clone-backend.onrender.com/api';
-
 const BlackjackGame = {
     deck: [],
     playerHand: [],

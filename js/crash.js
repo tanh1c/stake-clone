@@ -8,7 +8,6 @@ const CrashGame = {
     isAutoCashout: false,
     gameHistory: [],
     chart: null,
-    API_URL: 'https://stake-clone-backend.onrender.com/api',
 
     initialize() {
         const ctx = document.getElementById('crashChart').getContext('2d');
