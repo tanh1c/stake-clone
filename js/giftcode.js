@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/redeem-giftcode', {
+            const response = await fetch(`${API_URL}/redeem-giftcode`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadGiftcodeHistory() {
         try {
-            const response = await fetch('http://localhost:3000/api/giftcode-history', {
+            const response = await fetch(`${API_URL}/giftcode-history`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
