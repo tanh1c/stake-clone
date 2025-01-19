@@ -11,44 +11,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch(`${API_URL}/balance`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.status === 401) {
-            // Token hết hạn hoặc không hợp lệ
-            localStorage.removeItem('token');
-            window.location.href = 'auth.html';
-            return;
-        }
-        
-        const data = await response.json();
-        updateBalanceDisplay(data.balance);
-    } catch (error) {
-        console.error('Auth error:', error);
-        // Chỉ chuyển hướng nếu thực sự cần thiết
-        if (!document.cookie.includes('token')) {
-            localStorage.removeItem('token');
-            window.location.href = 'auth.html';
-        }
-        return;
-    }
-
-    // Load user info
-    try {
-        // Load balance
         const balanceResponse = await fetch(`${API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         
-        if (balanceResponse.ok) {
-            const balanceData = await balanceResponse.json();
-            document.querySelector('.balance').textContent = `Balance: $${balanceData.balance.toFixed(2)}`;
+        if (!balanceResponse.ok) {
+            if (balanceResponse.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'auth.html';
+                return;
+            }
+            throw new Error('Failed to load balance');
         }
+        
+        const balanceData = await balanceResponse.json();
+        updateBalanceDisplay(balanceData.balance);
 
         // Load username
         const profileResponse = await fetch(`${API_URL}/profile`, {
@@ -57,12 +36,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        if (profileResponse.ok) {
-            const profileData = await profileResponse.json();
-            document.querySelector('.username').textContent = profileData.username;
+        if (!profileResponse.ok) {
+            throw new Error('Failed to load profile');
         }
+
+        const profileData = await profileResponse.json();
+        document.querySelector('.username').textContent = profileData.username;
+
     } catch (error) {
-        console.error('Error loading user info:', error);
+        console.error('Error:', error);
+        // Chỉ chuyển hướng khi lỗi xác thực
+        if (error.message.includes('authentication') || error.message.includes('token')) {
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html';
+        }
+        return;
     }
 
     // Hàm cập nhật hiển thị số dư
@@ -84,6 +72,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 body: JSON.stringify({ amount })
             });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'auth.html';
+                    return null;
+                }
+                throw new Error('Failed to update balance');
+            }
             
             const data = await response.json();
             if (data.balance) {
