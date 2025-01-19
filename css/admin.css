@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0F1923;
+    color: #fff;
+    min-height: 100vh;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-box {
+    background: #1A2C38;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #00FF7F;
+    margin-bottom: 30px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    background: #2A3C48;
+    color: #fff;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: 2px solid #00FF7F;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    background: #00FF7F;
+    color: #0F1923;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #00CC6A;
+    transform: translateY(-2px);
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#giftcodeList {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.giftcode-item {
+    padding: 15px;
+    margin: 10px 0;
+    background: #2A3C48;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.giftcode-item.used {
+    opacity: 0.7;
+}
+
+.giftcode-info {
+    flex: 1;
+}
+
+.code {
+    font-weight: bold;
+    color: #00FF7F;
+}
+
+.amount {
+    margin-left: 15px;
+    color: #888;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status.unused {
+    background: rgba(0, 255, 127, 0.1);
+    color: #00FF7F;
+}
+
+.status.used {
+    background: rgba(255, 69, 58, 0.1);
+    color: #FF454A;
+} 

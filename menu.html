@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stake Clone - Game Menu</title>
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css">
+</head>
+<body>
+    <div class="menu-container">
+        <header>
+            <div class="logo">
+                <h1>SCAM</h1>
+            </div>
+            <div class="user-menu">
+                <button class="deposit-btn">Deposit</button>
+                <button onclick="window.location.href='giftcode.html'" class="giftcode-btn">Giftcode</button>
+                <div class="balance">Balance: $0.00</div>
+                <div class="user-profile">
+                    <span class="username">Loading...</span>
+                    <div class="user-avatar" id="avatarBtn">
+                        <img src="https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png" alt="User">
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item admin-only" onclick="window.location.href='admin.html'" style="display: none;">
+                            <i class="fas fa-cog"></i> Admin Panel
+                        </div>
+                        <div class="dropdown-item" onclick="window.location.href='leaderboard.html'">
+                            <i class="fas fa-trophy"></i> Leaderboard
+                        </div>
+                        <div class="dropdown-item" onclick="window.location.href='profile.html'">
+                            <i class="fas fa-user"></i> Profile
+                        </div>
+                        <div class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <h2>Popular Games</h2>
+            <div class="games-grid">
+                <a href="index.html#dice" class="game-card">
+                    <div class="game-banner dice">
+                        <i class="fas fa-dice"></i>
+                        <h3>Dice</h3>
+                        <p>Classic dice rolling game with multipliers</p>
+                    </div>
+                </a>
+
+                <a href="index.html#crash" class="game-card">
+                    <div class="game-banner crash">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Crash</h3>
+                        <p>Watch the multiplier grow and cash out before it crashes</p>
+                    </div>
+                </a>
+
+                <a href="index.html#mines" class="game-card">
+                    <div class="game-banner mines">
+                        <i class="fas fa-bomb"></i>
+                        <h3>Mines</h3>
+                        <p>Avoid the mines and collect gems for big wins</p>
+                    </div>
+                </a>
+
+                <a href="index.html#plinko" class="game-card">
+                    <div class="game-banner plinko">
+                        <i class="fas fa-sort-amount-down"></i>
+                        <h3>Plinko</h3>
+                        <p>Watch the ball bounce for random multipliers</p>
+                    </div>
+                </a>
+
+                <a href="index.html#blackjack" class="game-card">
+                    <div class="game-banner blackjack">
+                        <i class="fas fa-cards"></i>
+                        <h3>Blackjack</h3>
+                        <p>Classic casino card game against the dealer</p>
+                    </div>
+                </a>
+
+                <a href="index.html#hilo" class="game-card">
+                    <div class="game-banner hilo">
+                        <i class="fa-solid fa-cards-blank"></i>
+                        <h3>HiLo</h3>
+                        <p>Predict if the next card will be higher or lower</p>
+                    </div>
+                </a>
+
+                <a href="index.html#double-dice" class="game-card">
+                    <div class="game-banner double-dice">
+                        <i class="fa-solid fa-dice-two"></i>
+                        <h3>Double Dice</h3>
+                        <p>Double the excitement with two dice rolls</p>
+                    </div>
+                </a>
+
+                <a href="index.html#limbo" class="game-card">
+                    <div class="game-banner limbo">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <h3>Limbo</h3>
+                        <p>How low can you go for massive multipliers</p>
+                    </div>
+                </a>
+
+                <a href="index.html#slot" class="game-card">
+                    <div class="game-banner slot">
+                        <i class="fa-regular fa-slot-machine"></i>
+                        <h3>Slot Machine</h3>
+                        <p>Classic 3-reel slot machine with big payouts</p>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/menu.js"></script>
+</body>
+</html> 

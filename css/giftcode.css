@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0F1923;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.giftcode-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.giftcode-box {
+    background: #1A2C38;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #00FF7F;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    background: #2A3C48;
+    color: #fff;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: 2px solid #00FF7F;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    background: #00FF7F;
+    color: #0F1923;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #00CC6A;
+    transform: translateY(-2px);
+}
+
+#result-message {
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+#result-message.success {
+    background: rgba(0, 255, 127, 0.1);
+    color: #00FF7F;
+    border: 1px solid #00FF7F;
+}
+
+#result-message.error {
+    background: rgba(255, 69, 58, 0.1);
+    color: #FF454A;
+    border: 1px solid #FF454A;
+}
+
+.history-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #2A3C48;
+}
+
+.history-section h3 {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+#giftcodeHistory {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 10px;
+    margin: 5px 0;
+    background: #2A3C48;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.history-item .amount {
+    color: #00FF7F;
+    font-weight: bold;
+}
+
+.back-btn {
+    width: 100%;
+    margin-top: 20px;
+    background: #2A3C48;
+    color: #fff;
+}
+
+.back-btn:hover {
+    background: #3A4C58;
+}
+
+/* Animation cho history items */
+.history-item {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

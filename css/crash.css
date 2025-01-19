@@ -1,0 +1,52 @@
+.crash-history {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.history-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    margin-bottom: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.history-item.history-win {
+    background: linear-gradient(135deg, #00FF7F, #00CC6A);
+    color: #000;
+}
+
+.history-item.history-lose {
+    background: linear-gradient(135deg, #FF4444, #CC0000);
+    color: #fff;
+}
+
+/* Style cho scrollbar */
+.crash-history::-webkit-scrollbar {
+    width: 6px;
+}
+
+.crash-history::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 3px;
+}
+
+.crash-history::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+} 

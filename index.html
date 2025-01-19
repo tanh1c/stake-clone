@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stake Clone</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/sharp-solid.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/sharp-regular.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/sharp-light.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/duotone.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/brands.css">
+    <link rel="stylesheet" href="css/plinko.css">
+    <link rel="stylesheet" href="css/blackjack.css">
+    <link rel="stylesheet" href="css/hilo.css">
+    <link rel="stylesheet" href="css/double-dice.css">
+    <link rel="stylesheet" href="css/crash.css">
+    <link rel="stylesheet" href="css/limbo.css">
+    <link rel="stylesheet" href="css/slot.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>SCAM</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><i class="fas fa-dice"></i> Dice</li>
+                    <li><i class="fas fa-coins"></i> Mines</li>
+                    <li><i class="fas fa-chart-line"></i> Crash</li>
+                    <li><i class="fas fa-rocket"></i> Roulette</li>
+                    <li><i class="fas fa-sort-amount-down"></i> Plinko</li>
+                    <li><i class="fas fa-cards"></i> Blackjack</li>
+                    <li><i class="fa-solid fa-cards-blank"></i> HiLo</li>
+                    <li><i class="fa-solid fa-dice-two"></i> Double Dice</li>
+                    <li><i class="fa-solid fa-money-bill-trend-up"></i> Limbo</li>
+                    <li><i class="fa-regular fa-slot-machine"></i> Slot</li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="window.location.href='menu.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Menu
+                    </button>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <button class="deposit-btn">Deposit</button>
+                        <button onclick="window.location.href='giftcode.html'" class="giftcode-btn">Giftcode</button>
+                        <div class="balance">Balance: $0.00</div>
+                        <div class="user-profile">
+                            <span class="username">Loading...</span>
+                            <div class="user-avatar">
+                                <img src="https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png" alt="User">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dice Game -->
+            <div class="game-container" data-game="dice">
+                <h2>Dice</h2>
+                <div class="dice-game">
+                    <div class="betting-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="betAmount" value="10">
+                        </div>
+                        <div class="win-chance">
+                            <label>Win Chance</label>
+                            <input type="number" id="winChance" value="50">
+                        </div>
+                        <div class="multiplier">
+                            <label>Multiplier</label>
+                            <span id="multiplier">2.00x</span>
+                        </div>
+                    </div>
+                    <div class="dice-roll">
+                        <div class="dice-animation">
+                            <div class="dice-number" id="rollResult">50.00</div>
+                            <div class="progress-bar">
+                                <div class="progress" id="rollProgress"></div>
+                            </div>
+                        </div>
+                        <div class="betting-buttons">
+                            <button class="roll-button" onclick="rollDice()">Roll Dice</button>
+                            <div class="auto-bet">
+                                <label class="switch">
+                                    <input type="checkbox" id="autoBet">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Auto Bet</span>
+                            </div>
+                        </div>
+                        <div class="bet-controls">
+                            <button onclick="halfBet()">½</button>
+                            <button onclick="doubleBet()">2×</button>
+                            <button onclick="maxBet()">Max</button>
+                        </div>
+                        <div class="bet-history">
+                            <h3>Lịch sử</h3>
+                            <div class="history-list" id="betHistory"></div>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Tổng số cược</div>
+                                <div class="stat-value" id="totalBets">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Tỷ lệ thắng</div>
+                                <div class="stat-value" id="winRate">0%</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Lợi nhuận</div>
+                                <div class="stat-value" id="profit">0.00</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Chuỗi thắng thua</div>
+                                <div class="stat-value">
+                                    <span id="bestStreak">0</span>/<span id="worstStreak">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hotkeys">
+                            <div class="hotkey-item">
+                                <span class="key">Space</span>
+                                <span>Roll</span>
+                            </div>
+                            <div class="hotkey-item">
+                                <span class="key">Q</span>
+                                <span>½ Bet</span>
+                            </div>
+                            <div class="hotkey-item">
+                                <span class="key">W</span>
+                                <span>2× Bet</span>
+                            </div>
+                            <div class="hotkey-item">
+                                <span class="key">E</span>
+                                <span>Max Bet</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auto-bet-settings">
+                        <div class="setting-group">
+                            <label>Số lần bet</label>
+                            <input type="number" id="autoBetCount" value="0" min="0">
+                            <span class="hint">(0 = Vô hạn)</span>
+                        </div>
+                        <div class="setting-group">
+                            <label>Khi thắng</label>
+                            <select id="onWinAction">
+                                <option value="continue">Tiếp tục</option>
+                                <option value="reset">Reset về bet gốc</option>
+                                <option value="increase">Tăng bet</option>
+                                <option value="stop">Dừng auto</option>
+                            </select>
+                            <input type="number" id="onWinValue" value="100" min="1" max="1000">
+                            <span class="hint">%</span>
+                        </div>
+                        <div class="setting-group">
+                            <label>Khi thua</label>
+                            <select id="onLoseAction">
+                                <option value="continue">Tiếp tục</option>
+                                <option value="reset">Reset về bet gốc</option>
+                                <option value="increase">Tăng bet</option>
+                                <option value="stop">Dừng auto</option>
+                            </select>
+                            <input type="number" id="onLoseValue" value="200" min="1" max="1000">
+                            <span class="hint">%</span>
+                        </div>
+                        <div class="setting-group">
+                            <label>Dừng khi</label>
+                            <div class="stop-conditions">
+                                <div>
+                                    <input type="checkbox" id="stopOnProfit">
+                                    <label>Lợi nhuận ></label>
+                                    <input type="number" id="profitAmount" value="1000">
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="stopOnLoss">
+                                    <label>Thua lỗ ></label>
+                                    <input type="number" id="lossAmount" value="1000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mines Game -->
+            <div class="game-container" id="minesGame" data-game="mines" style="display: none;">
+                <h2>Mines</h2>
+                <div class="mines-game">
+                    <div class="mines-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="minesBetAmount" value="10">
+                        </div>
+                        <div class="mines-count">
+                            <label>Mines Count</label>
+                            <input type="number" id="minesCount" value="5" min="1" max="24">
+                        </div>
+                        <div class="multiplier">
+                            <label>Multiplier</label>
+                            <span id="minesMultiplier">1.00x</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mines-grid" id="minesGrid"></div>
+                    
+                    <div class="mines-buttons">
+                        <button id="startMines" onclick="startMinesGame()">
+                            <span class="button-text">
+                                Start Game
+                                <i class="fas fa-play"></i>
+                            </span>
+                        </button>
+                        <button id="cashoutMines" onclick="cashout()" disabled>
+                            <span class="button-text">
+                                Cashout
+                                <i class="fas fa-coins"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crash Game -->
+            <div class="game-container" id="crashGame" data-game="crash" style="display: none;">
+                <h2>Crash</h2>
+                <div class="crash-game">
+                    <div class="crash-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="crashBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfCrashBet">½</button>
+                                <button id="doubleCrashBet">2×</button>
+                                <button id="maxCrashBet">Max</button>
+                            </div>
+                        </div>
+                        <div class="auto-cashout">
+                            <label>Auto Cashout</label>
+                            <div class="auto-cashout-controls">
+                                <label class="switch">
+                                    <input type="checkbox" id="autoCashout">
+                                    <span class="slider"></span>
+                                </label>
+                                <input type="number" id="autoCashoutAt" value="2.00" step="0.01" disabled>
+                                <span>x</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="crash-chart-container">
+                        <canvas id="crashChart"></canvas>
+                        <div class="current-multiplier" id="currentMultiplier">1.00x</div>
+                    </div>
+                    
+                    <div class="crash-buttons">
+                        <button id="startCrash" onclick="startCrashGame()">
+                            <span class="button-text">
+                                Place Bet
+                                <i class="fas fa-play"></i>
+                            </span>
+                        </button>
+                        <button id="cashoutCrash" onclick="cashoutCrash()" disabled>
+                            <span class="button-text">
+                                Cashout
+                                <i class="fas fa-coins"></i>
+                            </span>
+                        </button>
+                    </div>
+                    
+                    <div class="crash-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="crashHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roulette Game -->
+            <div class="game-container" id="rouletteGame" data-game="roulette" style="display: none;">
+                <h2>Roulette</h2>
+                <div class="roulette-game">
+                    <div class="roulette-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="rouletteBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfRouletteBet">½</button>
+                                <button id="doubleRouletteBet">2×</button>
+                                <button id="maxRouletteBet">Max</button>
+                            </div>
+                        </div>
+                        <div class="current-bets" id="currentBets"></div>
+                    </div>
+                    
+                    <div class="roulette-result" id="rouletteResult">
+                        <div class="result-display">
+                            <span class="result-number">?</span>
+                        </div>
+                    </div>
+                    
+                    <div class="betting-board" id="bettingBoard"></div>
+                    
+                    <div class="roulette-buttons">
+                        <button id="spinRoulette" class="roulette-button spin-button" onclick="spinRoulette()">
+                            <span class="button-text">
+                                Spin
+                                <i class="fas fa-sync-alt"></i>
+                            </span>
+                        </button>
+                        <button id="clearBets" class="roulette-button clear-button" onclick="clearRouletteBets()">
+                            <span class="button-text">
+                                Clear Bets
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plinko Game -->
+            <div class="game-container" id="plinkoGame" data-game="plinko" style="display: none;">
+                <h2>Plinko</h2>
+                <div class="plinko-game">
+                    <div class="plinko-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="plinkoBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfPlinkoBet">½</button>
+                                <button id="doublePlinkoBet">2×</button>
+                                <button id="maxPlinkoBet">Max</button>
+                            </div>
+                        </div>
+                        <div class="risk-selector">
+                            <label>Risk Level</label>
+                            <select id="plinkoRisk">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="rows-selector">
+                            <label>Rows</label>
+                            <select id="plinkoRows">
+                                <option value="8">8</option>
+                                <option value="12" selected>12</option> 
+                                <option value="16">16</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="plinko-board">
+                        <canvas id="plinkoCanvas"></canvas>
+                    </div>
+
+                    <div class="multiplier-slots">
+                        <!-- Multiplier slots will be generated by JS -->
+                    </div>
+                    
+                    <div class="plinko-buttons">
+                        <button id="dropBall">
+                            <span class="button-text">
+                                Drop Ball
+                                <i class="fas fa-circle"></i>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="plinko-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="plinkoHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blackjack Game -->
+            <div class="game-container" id="blackjackGame" data-game="blackjack" style="display: none;">
+                <h2>Blackjack</h2>
+                <div class="blackjack-game">
+                    <div class="blackjack-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="blackjackBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfBlackjackBet">½</button>
+                                <button id="doubleBlackjackBet">2×</button>
+                                <button id="maxBlackjackBet">Max</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="blackjack-table">
+                        <div class="dealer-hand">
+                            <h3>Dealer's Hand <span class="hand-value" id="dealerValue">0</span></h3>
+                            <div class="cards" id="dealerCards"></div>
+                        </div>
+                        
+                        <div class="player-hand">
+                            <h3>Your Hand <span class="hand-value" id="playerValue">0</span></h3>
+                            <div class="cards" id="playerCards"></div>
+                        </div>
+
+                        <div class="blackjack-buttons">
+                            <button id="dealButton">Deal</button>
+                            <button id="hitButton" disabled>Hit</button>
+                            <button id="standButton" disabled>Stand</button>
+                            <button id="doubleButton" disabled>Double</button>
+                        </div>
+                    </div>
+
+                    <div class="blackjack-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="blackjackHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HiLo Game -->
+            <div class="game-container" id="hiloGame" data-game="hilo" style="display: none;">
+                <h2>HiLo</h2>
+                <div class="hilo-game">
+                    <div class="hilo-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="hiloBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfHiloBet">½</button>
+                                <button id="doubleHiloBet">2×</button>
+                                <button id="maxHiloBet">Max</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hilo-table">
+                        <div class="previous-card">
+                            <h3>Previous Card</h3>
+                            <div class="card" id="previousCard"></div>
+                        </div>
+                        
+                        <div class="current-card">
+                            <h3>Current Card</h3>
+                            <div class="card" id="currentCard"></div>
+                            <div class="total-multiplier">
+                                <span class="label">Total Multiplier</span>
+                                <span class="value" id="totalMultiplier">1.00x</span>
+                            </div>
+                            <div class="multiplier">
+                                <div class="multiplier-item">
+                                    <span class="label">Higher</span>
+                                    <span class="value" id="higherMultiplier">2.00x</span>
+                                </div>
+                                <div class="multiplier-item">
+                                    <span class="label">Lower</span>
+                                    <span class="value" id="lowerMultiplier">2.00x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="next-card">
+                            <h3>Next Card</h3>
+                            <div class="card hidden" id="nextCard"></div>
+                        </div>
+                    </div>
+
+                    <div class="hilo-buttons">
+                        <button id="startHilo">
+                            <span class="button-text">
+                                Start Game
+                                <i class="fas fa-play"></i>
+                            </span>
+                        </button>
+                        <button id="higherButton" disabled>
+                            <span class="button-text">
+                                Higher
+                                <i class="fas fa-arrow-up"></i>
+                            </span>
+                        </button>
+                        <button id="lowerButton" disabled>
+                            <span class="button-text">
+                                Lower
+                                <i class="fas fa-arrow-down"></i>
+                            </span>
+                        </button>
+                        <button id="cashoutButton" disabled>
+                            <span class="button-text">
+                                Cash Out
+                                <i class="fas fa-coins"></i>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="hilo-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="hiloHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Double Dice Game -->
+            <div class="game-container" id="doubleDiceGame" data-game="double-dice" style="display: none;">
+                <h2>Double Dice</h2>
+                <div class="double-dice-game">
+                    <div class="double-dice-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="doubleDiceBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfDoubleDiceBet">½</button>
+                                <button id="doubleDoubleDiceBet">2×</button>
+                                <button id="maxDoubleDiceBet">Max</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="double-dice-table">
+                        <div class="dice-container">
+                            <div class="dice" id="dice1">
+                                <div class="dice-face front">1</div>
+                                <div class="dice-face back">6</div>
+                                <div class="dice-face top">2</div>
+                                <div class="dice-face bottom">5</div>
+                                <div class="dice-face right">3</div>
+                                <div class="dice-face left">4</div>
+                            </div>
+                            <div class="dice" id="dice2">
+                                <div class="dice-face front">1</div>
+                                <div class="dice-face back">6</div>
+                                <div class="dice-face top">2</div>
+                                <div class="dice-face bottom">5</div>
+                                <div class="dice-face right">3</div>
+                                <div class="dice-face left">4</div>
+                            </div>
+                        </div>
+
+                        <div class="betting-options">
+                            <div class="bet-row">
+                                <button class="bet-option" data-type="under7">
+                                    <span class="option-name">Under 7</span>
+                                    <span class="multiplier">2.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="over7">
+                                    <span class="option-name">Over 7</span>
+                                    <span class="multiplier">2.00x</span>
+                                </button>
+                            </div>
+                            <div class="bet-row">
+                                <button class="bet-option" data-type="even">
+                                    <span class="option-name">Even</span>
+                                    <span class="multiplier">2.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="odd">
+                                    <span class="option-name">Odd</span>
+                                    <span class="multiplier">2.00x</span>
+                                </button>
+                            </div>
+                            <div class="bet-row numbers">
+                                <button class="bet-option" data-type="2">
+                                    <span class="option-name">2</span>
+                                    <span class="multiplier">30.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="3">
+                                    <span class="option-name">3</span>
+                                    <span class="multiplier">15.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="4">
+                                    <span class="option-name">4</span>
+                                    <span class="multiplier">10.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="5">
+                                    <span class="option-name">5</span>
+                                    <span class="multiplier">8.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="6">
+                                    <span class="option-name">6</span>
+                                    <span class="multiplier">6.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="7">
+                                    <span class="option-name">7</span>
+                                    <span class="multiplier">5.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="8">
+                                    <span class="option-name">8</span>
+                                    <span class="multiplier">6.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="9">
+                                    <span class="option-name">9</span>
+                                    <span class="multiplier">8.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="10">
+                                    <span class="option-name">10</span>
+                                    <span class="multiplier">10.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="11">
+                                    <span class="option-name">11</span>
+                                    <span class="multiplier">15.00x</span>
+                                </button>
+                                <button class="bet-option" data-type="12">
+                                    <span class="option-name">12</span>
+                                    <span class="multiplier">30.00x</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="double-dice-buttons">
+                        <button id="rollDice">
+                            <span class="button-text">
+                                Roll Dice
+                                <i class="fas fa-dice"></i>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="double-dice-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="doubleDiceHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limbo Game -->
+            <div class="game-container" id="limboGame" data-game="limbo" style="display: none;">
+                <h2>Limbo</h2>
+                <div class="limbo-game">
+                    <div class="limbo-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="limboBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfLimboBet">½</button>
+                                <button id="doubleLimboBet">2×</button>
+                                <button id="maxLimboBet">Max</button>
+                            </div>
+                        </div>
+                        <div class="target-multiplier">
+                            <label>Target Multiplier</label>
+                            <input type="number" id="limboTarget" value="2.00" step="0.01" min="1.01">
+                            <div class="auto-bet">
+                                <label class="switch">
+                                    <input type="checkbox" id="autoLimbo">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>Auto Play</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="limbo-chart-container">
+                        <canvas id="limboChart"></canvas>
+                    </div>
+
+                    <div class="limbo-buttons">
+                        <button id="startLimbo">Play</button>
+                    </div>
+
+                    <div class="limbo-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="limboHistory"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slot Machine Game -->
+            <div class="game-container" id="slotGame" data-game="slot" style="display: none;">
+                <h2>Slot Machine</h2>
+                <div class="slot-game">
+                    <div class="slot-controls">
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="slotBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfSlotBet">½</button>
+                                <button id="doubleSlotBet">2×</button>
+                                <button id="maxSlotBet">Max</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slot-container">
+                        <div class="slot-reels"></div>
+                        <button id="spinSlot">Spin</button>
+                    </div>
+
+                    <div class="paytable">
+                        <div class="paytable-title">Paytable</div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">🎰</span>
+                            <span class="paytable-value">50x</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">7️⃣</span>
+                            <span class="paytable-value">20x</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">💎</span>
+                            <span class="paytable-value">10x</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">🍇</span>
+                            <span class="paytable-value">4x</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">🍋</span>
+                            <span class="paytable-value">3x</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span class="paytable-symbol">🍎</span>
+                            <span class="paytable-value">2x</span>
+                        </div>
+                    </div>
+
+                    <div class="slot-history">
+                        <h3>History</h3>
+                        <div class="history-list" id="slotHistory"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tutorialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTutorial()">&times;</span>
+            <h2>Hướng dẫn chơi Dice</h2>
+            
+            <div class="tutorial-steps">
+                <div class="tutorial-step">
+                    <h3>1. Cách đặt cược</h3>
+                    <p>- Nhập số tiền muốn cược vào ô "Bet Amount"</p>
+                    <p>- Chọn tỷ lệ thắng trong ô "Win Chance" (1-95%)</p>
+                    <p>- Hệ số nhân (Multiplier) sẽ tự động tính toán dựa trên tỷ lệ thắng</p>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>2. Cách thức hoạt động</h3>
+                    <p>- Hệ thống sẽ tạo một số ngẫu nhiên từ 0 đến 100</p>
+                    <p>- Nếu số ngẫu nhiên ≤ Win Chance: Bạn thắng</p>
+                    <p>- Nếu số ngẫu nhiên > Win Chance: Bạn thua</p>
+                    <p>- Số tiền thắng = Bet Amount × Multiplier</p>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>3. Các tính năng bổ sung</h3>
+                    <p>- Nút ½: Giảm một nửa số tiền cược</p>
+                    <p>- Nút 2×: Tăng gấp đôi số tiền cược</p>
+                    <p>- Nút Max: Đặt toàn bộ số dư làm tiền cược</p>
+                    <p>- Auto Bet: Tự động đặt cược liên tục</p>
+                    <p>- Phím Space: Nhanh chóng Roll Dice</p>
+                </div>
+
+                <div class="tutorial-step">
+                    <h3>4. Chiến thuật chơi</h3>
+                    <p>- Tỷ lệ thắng cao = Multiplier thấp = An toàn hơn</p>
+                    <p>- Tỷ lệ thắng thấp = Multiplier cao = Rủi ro cao</p>
+                    <p>- Luôn quản lý vốn cẩn thận, chỉ cược số tiền có thể chấp nhận mất</p>
+                    <p>- Theo dõi lịch sử để điều chỉnh chiến thuật</p>
+                </div>
+            </div>
+
+            <div class="tutorial-footer">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="dontShowAgain">
+                    <span class="checkmark"></span>
+                    Không hiện lại
+                </label>
+                <button onclick="closeTutorial()" class="tutorial-close-btn">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/crash.js"></script>
+    <script src="js/dice.js"></script>
+    <script src="js/mines.js"></script>
+    <script src="js/roulette.js"></script>
+    <script src="js/plinko.js"></script>
+    <script src="js/blackjack.js"></script>
+    <script src="js/hilo.js"></script>
+    <script src="js/double-dice.js"></script>
+    <script src="js/limbo.js"></script>
+    <script src="js/slot.js"></script>
+</body>
+</html> 

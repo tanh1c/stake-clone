@@ -1,0 +1,267 @@
+:root {
+    --default-avatar: url('https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 32px;
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.username {
+    font-weight: bold;
+    color: #fff;
+}
+
+.deposit-btn {
+    padding: 8px 20px;
+    background: #00FF7F;
+    border: none;
+    border-radius: 5px;
+    color: #0F1923;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.deposit-btn:hover {
+    background: #00CC6A;
+    transform: translateY(-2px);
+}
+
+.giftcode-btn {
+    padding: 8px 20px;
+    background: #FF3366;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.giftcode-btn:hover {
+    background: #E62E5C;
+    transform: translateY(-2px);
+}
+
+.balance {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.user-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #00FF7F;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background-image: var(--default-avatar);
+    background-size: cover;
+    background-position: center;
+}
+
+.user-avatar:hover img {
+    transform: scale(1.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #1A2C38;
+    border-radius: 8px;
+    padding: 8px 0;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+.dropdown-item {
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background: #2A3C48;
+}
+
+.dropdown-item i {
+    width: 20px;
+    color: #00FF7F;
+}
+
+.admin-only {
+    border-bottom: 1px solid #2A3C48;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+}
+
+.admin-only i {
+    color: #FF3366;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+main h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.game-card {
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-banner {
+    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-banner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-color: #00FF7F;
+}
+
+.game-banner i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.game-banner h3 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    color: #fff;
+}
+
+.game-banner p {
+    font-size: 14px;
+    color: #94A3B8;
+    margin: 0;
+}
+
+/* Game-specific gradients */
+.game-banner.dice { background: linear-gradient(135deg, #1A242D 0%, #141C24 100%); }
+.game-banner.crash { background: linear-gradient(135deg, #2D1A1A 0%, #241414 100%); }
+.game-banner.mines { background: linear-gradient(135deg, #1A2D1A 0%, #142414 100%); }
+.game-banner.plinko { background: linear-gradient(135deg, #1A1A2D 0%, #141424 100%); }
+.game-banner.blackjack { background: linear-gradient(135deg, #2D1A2D 0%, #241424 100%); }
+.game-banner.hilo { background: linear-gradient(135deg, #2D2D1A 0%, #242414 100%); }
+.game-banner.double-dice { background: linear-gradient(135deg, #1A2D2D 0%, #142424 100%); }
+.game-banner.limbo { background: linear-gradient(135deg, #2D1A24 0%, #241419 100%); }
+.game-banner.slot { background: linear-gradient(135deg, #1A1D2D 0%, #141724 100%); }
+
+/* Hover effects */
+.game-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,255,127,0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-banner:hover::after {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .game-banner {
+        padding: 20px;
+    }
+    
+    .game-banner i {
+        font-size: 36px;
+    }
+    
+    .game-banner h3 {
+        font-size: 20px;
+    }
+} 

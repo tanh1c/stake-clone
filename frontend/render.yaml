@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: stake-clone-frontend
+    env: static
+    buildCommand: echo "Static site, no build needed"
+    staticPublishPath: ./
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache 

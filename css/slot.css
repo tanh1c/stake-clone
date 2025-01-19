@@ -1,0 +1,223 @@
+.slot-game {
+    background: linear-gradient(180deg, #1A242D, #141C24);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.slot-controls {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.slot-container {
+    background: linear-gradient(180deg, #1E2A35 0%, #141C24 100%);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.slot-reels {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.reel {
+    width: 120px;
+    height: 360px;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.symbol {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    background: #1A242D;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.1s ease;
+}
+
+.symbol.win-highlight {
+    background: rgba(0,255,127,0.2);
+    box-shadow: 0 0 20px rgba(0,255,127,0.3);
+    animation: pulse 0.5s ease infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.slot-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+#spinSlot {
+    min-width: 120px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0,255,127,0.2);
+}
+
+#spinSlot:hover {
+    transform: translateY(-2px);
+}
+
+#spinSlot:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.slot-history {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.history-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    margin-bottom: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.history-item.win {
+    background: linear-gradient(135deg, #00FF7F, #00CC6A);
+    color: #000;
+}
+
+.history-item.lose {
+    background: linear-gradient(135deg, #FF4444, #CC0000);
+    color: #fff;
+}
+
+/* Game result message */
+.game-result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.game-result.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.game-result.win {
+    border: 2px solid #00FF7F;
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.3);
+}
+
+.game-result.lose {
+    border: 2px solid #FF4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.result-text {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.win .result-text {
+    color: #00FF7F;
+}
+
+.lose .result-text {
+    color: #FF4444;
+}
+
+.result-amount {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Paytable */
+.paytable {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.paytable-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.paytable-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+}
+
+.paytable-symbol {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.paytable-value {
+    color: #00FF7F;
+    font-weight: bold;
+} 

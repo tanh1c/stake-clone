@@ -1,0 +1,200 @@
+.limbo-game {
+    background: linear-gradient(180deg, #1A242D, #141C24);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.limbo-controls {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.limbo-chart-container {
+    background: linear-gradient(180deg, #1E2A35 0%, #141C24 100%);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    position: relative;
+    height: 400px;
+}
+
+#limboChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.limbo-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.limbo-buttons button {
+    min-width: 120px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#startLimbo {
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0,255,127,0.2);
+}
+
+.limbo-buttons button:hover {
+    transform: translateY(-2px);
+}
+
+.limbo-buttons button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* History styles */
+.limbo-history {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.history-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    margin-bottom: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.history-item.win {
+    background: linear-gradient(135deg, #00FF7F, #00CC6A);
+    color: #000;
+}
+
+.history-item.lose {
+    background: linear-gradient(135deg, #FF4444, #CC0000);
+    color: #fff;
+}
+
+/* Scrollbar styles */
+.limbo-history::-webkit-scrollbar {
+    width: 6px;
+}
+
+.limbo-history::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+    border-radius: 3px;
+}
+
+.limbo-history::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+}
+
+/* Game result message */
+.game-result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.game-result.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.game-result.win {
+    border: 2px solid #00FF7F;
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.3);
+}
+
+.game-result.lose {
+    border: 2px solid #FF4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.result-text {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.win .result-text {
+    color: #00FF7F;
+}
+
+.lose .result-text {
+    color: #FF4444;
+}
+
+.result-amount {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Rate display */
+.limbo-rate {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 64px;
+    font-weight: bold;
+    color: #00FF7F;
+    text-shadow: 0 0 20px rgba(0, 255, 127, 0.5);
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 30px;
+    border-radius: 10px;
+}
+
+.limbo-rate.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+/* Thêm màu khác cho rate khi thua */
+.limbo-rate.lose {
+    color: #FF4444;
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+} 

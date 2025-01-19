@@ -1,0 +1,138 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0F1923;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leaderboard-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.leaderboard-box {
+    background: #1A2C38;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #00FF7F;
+    margin-bottom: 30px;
+}
+
+.leaderboard-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 150px;
+    padding: 15px;
+    background: #2A3C48;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #888;
+}
+
+.player-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 150px;
+    padding: 15px;
+    background: #243441;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.player-item:hover {
+    transform: translateX(5px);
+    background: #2A3C48;
+}
+
+.rank {
+    font-weight: bold;
+    color: #888;
+}
+
+.player-item .rank {
+    font-size: 18px;
+}
+
+.player-item:nth-child(1) .rank {
+    color: #FFD700;
+}
+
+.player-item:nth-child(2) .rank {
+    color: #C0C0C0;
+}
+
+.player-item:nth-child(3) .rank {
+    color: #CD7F32;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #00FF7F;
+}
+
+.balance {
+    color: #00FF7F;
+    font-weight: bold;
+    text-align: right;
+}
+
+.back-btn {
+    width: 100%;
+    padding: 12px;
+    background: #2A3C48;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.back-btn:hover {
+    background: #3A4C58;
+}
+
+#leaderboardList {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+/* Custom scrollbar */
+#leaderboardList::-webkit-scrollbar {
+    width: 8px;
+}
+
+#leaderboardList::-webkit-scrollbar-track {
+    background: #1A2C38;
+}
+
+#leaderboardList::-webkit-scrollbar-thumb {
+    background: #2A3C48;
+    border-radius: 4px;
+}
+
+#leaderboardList::-webkit-scrollbar-thumb:hover {
+    background: #3A4C58;
+} 

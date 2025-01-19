@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0F1923;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+}
+
+.profile-box {
+    background: #1A2C38;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #00FF7F;
+    margin-bottom: 30px;
+}
+
+.avatar-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #00FF7F;
+    object-fit: cover;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.avatar-overlay i {
+    color: #fff;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #888;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    background: #2A3C48;
+    color: #fff;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: 2px solid #00FF7F;
+}
+
+input[readonly] {
+    background: #1E2832;
+    cursor: not-allowed;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background: #00FF7F;
+    color: #0F1923;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.save-btn:hover {
+    background: #00CC6A;
+    transform: translateY(-2px);
+}
+
+.back-btn {
+    width: 100%;
+    padding: 12px;
+    background: #2A3C48;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #3A4C58;
+} 

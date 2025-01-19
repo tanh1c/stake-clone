@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Giftcode - Stake Clone</title>
+    <link rel="stylesheet" href="css/giftcode.css">
+</head>
+<body>
+    <div class="giftcode-container">
+        <div class="giftcode-box">
+            <h2>Redeem Giftcode</h2>
+            <div class="input-group">
+                <input type="text" id="giftcodeInput" placeholder="Enter your giftcode">
+                <button id="redeemBtn">Redeem</button>
+            </div>
+            <div id="result-message"></div>
+            
+            <div class="history-section">
+                <h3>Redemption History</h3>
+                <div id="giftcodeHistory"></div>
+            </div>
+            
+            <button class="back-btn" onclick="window.location.href='menu.html'">Back to Menu</button>
+        </div>
+    </div>
+    <script src="js/giftcode.js"></script>
+</body>
+</html> 
