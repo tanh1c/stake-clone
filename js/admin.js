@@ -1,3 +1,5 @@
+const API_URL = 'http://localhost:3000/api';
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Kiểm tra đăng nhập và quyền admin
     const token = localStorage.getItem('token');
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/admin/create-giftcode', {
+            const response = await fetch(`${API_URL}/admin/giftcode/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const status = filterStatus.value;
             const search = searchInput.value.trim();
 
-            const response = await fetch(`http://localhost:3000/api/admin/giftcodes?status=${status}&search=${search}`, {
+            const response = await fetch(`${API_URL}/admin/giftcodes?status=${status}&search=${search}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
