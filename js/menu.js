@@ -1,32 +1,68 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Lấy token từ localStorage
+    const API_URL = 'https://stake-clone-backend.onrender.com/api';
     const token = localStorage.getItem('token');
+    
     if (!token) {
         window.location.href = 'auth.html';
         return;
     }
-    
-    // Lấy số dư từ server
+
+    // Kiểm tra token và load thông tin người dùng
     try {
-        const response = await fetch('http://localhost:3000/api/balance', {
+        // Load balance
+        const balanceResponse = await fetch(`${API_URL}/balance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
-        if (!response.ok) {
-            throw new Error('Unauthorized');
+
+        if (!balanceResponse.ok) {
+            if (balanceResponse.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'auth.html';
+                return;
+            }
+            throw new Error('Failed to load balance');
         }
-        
-        const data = await response.json();
-        const balanceElement = document.querySelector('.balance');
-        if (balanceElement) {
-            balanceElement.textContent = `Balance: $${data.balance.toFixed(2)}`;
+
+        const balanceData = await balanceResponse.json();
+        document.querySelector('.balance').textContent = `Balance: $${balanceData.balance.toFixed(2)}`;
+
+        // Load username
+        const profileResponse = await fetch(`${API_URL}/profile`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!profileResponse.ok) {
+            throw new Error('Failed to load profile');
         }
+
+        const profileData = await profileResponse.json();
+        document.querySelector('.username').textContent = profileData.username;
+
+        // Kiểm tra quyền admin
+        const adminCheck = await fetch(`${API_URL}/check-admin`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (adminCheck.ok) {
+            const adminData = await adminCheck.json();
+            if (adminData.isAdmin) {
+                document.querySelector('.admin-only').style.display = 'flex';
+            }
+        }
+
     } catch (error) {
-        console.error('Error fetching balance:', error);
-        window.location.href = 'auth.html';
-        return;
+        console.error('Error:', error);
+        // Chỉ chuyển hướng khi lỗi xác thực
+        if (error.message.includes('authentication') || error.message.includes('token')) {
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html';
+        }
     }
 
     // Handle game card clicks
@@ -36,34 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('selectedGame', gameId);
         });
     });
-
-    // Load và hiển thị username
-    try {
-        const response = await fetch('http://localhost:3000/api/profile', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            document.querySelector('.username').textContent = data.username;
-            
-            // Kiểm tra quyền admin
-            const adminCheck = await fetch('http://localhost:3000/api/check-admin', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            const adminData = await adminCheck.json();
-            if (adminData.isAdmin) {
-                document.querySelector('.admin-only').style.display = 'flex';
-            }
-        }
-    } catch (error) {
-        console.error('Error loading username:', error);
-    }
 
     // Xử lý dropdown menu
     const avatarBtn = document.getElementById('avatarBtn');

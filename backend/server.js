@@ -78,25 +78,33 @@ app.post('/api/login', async (req, res) => {
         
         if (!user) {
             console.log('User not found:', username);
-            return res.status(401).json({ error: 'User not found' });
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
         
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             console.log('Invalid password for user:', username);
-            return res.status(401).json({ error: 'Invalid password' });
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
         
         const token = jwt.sign(
-            { userId: user._id },
+            { 
+                userId: user._id,
+                username: user.username
+            },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
+        
         console.log('Login successful:', username);
-        res.json({ token, balance: user.balance });
+        res.json({ 
+            token,
+            balance: user.balance,
+            username: user.username
+        });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -108,15 +116,21 @@ const auth = async (req, res, next) => {
             throw new Error('No token provided');
         }
         const token = authHeader.replace('Bearer ', '');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findOne({ _id: decoded.userId });
         
-        if (!user) {
-            throw new Error();
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findOne({ _id: decoded.userId });
+            
+            if (!user) {
+                throw new Error('User not found');
+            }
+            
+            req.user = user;
+            next();
+        } catch (jwtError) {
+            console.error('JWT verification error:', jwtError);
+            res.status(401).json({ error: 'Invalid token' });
         }
-        
-        req.user = user;
-        next();
     } catch (error) {
         console.error('Auth middleware error:', error);
         res.status(401).json({ error: 'Please authenticate' });

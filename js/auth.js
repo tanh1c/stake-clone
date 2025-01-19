@@ -1,6 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://stake-clone-backend.onrender.com/api';
     
+    // Kiểm tra nếu đã đăng nhập thì chuyển đến menu
+    const token = localStorage.getItem('token');
+    if (token) {
+        window.location.href = 'menu.html';
+        return;
+    }
+    
     // Tab switching
     const tabBtns = document.querySelectorAll('.tab-btn');
     const authForms = document.querySelectorAll('.auth-form');
@@ -40,22 +47,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password })
             });
             
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Login failed');
-            }
-            
             const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Login failed');
+            }
             
             if (data.token) {
                 localStorage.setItem('token', data.token);
                 window.location.href = 'menu.html';
-            } else {
-                showError(loginForm, data.error);
             }
         } catch (error) {
             console.error('Login error:', error);
-            showError(loginForm, 'Đăng nhập thất bại. Vui lòng thử lại.');
+            showError(loginForm, error.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
         }
     });
     
