@@ -1,39 +1,41 @@
 const JavaScriptObfuscator = {
     // Hàm mã hóa code
     obfuscate(code) {
-        return `
-            (function(){
-                // Chống debug
-                setInterval(() => {
-                    const start = new Date();
-                    debugger;
-                    const end = new Date();
-                    if (end - start > 100) {
-                        window.location.href = 'about:blank';
+        try {
+            // Mã hóa code bằng base64 và thêm một số nhiễu
+            const salt = Math.random().toString(36).substring(7);
+            const encoded = btoa(encodeURIComponent(code + salt));
+            
+            return `
+                (function(){
+                    try {
+                        // Anti-debug
+                        const debug = function() {
+                            debugger;
+                        };
+                        setInterval(debug, 100);
+                        
+                        // Chống copy
+                        document.addEventListener('contextmenu', e => e.preventDefault());
+                        
+                        // Chống F12
+                        document.addEventListener('keydown', e => {
+                            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                                e.preventDefault();
+                                return false;
+                            }
+                        });
+                        
+                        // Giải mã và thực thi code
+                        const decoded = decodeURIComponent(atob('${encoded}'.slice(0, -salt.length)));
+                        eval(decoded);
+                    } catch(e) {
+                        console.warn('Loading error');
                     }
-                }, 100);
-
-                // Chống copy
-                document.addEventListener('contextmenu', e => e.preventDefault());
-                document.addEventListener('keydown', e => {
-                    if (e.ctrlKey && (e.key === 'u' || e.key === 's')) {
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-
-                // Chống F12 
-                document.addEventListener('keydown', e => {
-                    if (e.key === 'F12') {
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-
-                // Mã hóa code chính
-                const encoded = btoa(encodeURIComponent(code));
-                return Function(decodeURIComponent(atob(encoded)))();
-            })();
-        `;
+                })();
+            `;
+        } catch(e) {
+            return code; // Fallback to original code if obfuscation fails
+        }
     }
 }; 

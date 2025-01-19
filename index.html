@@ -787,15 +787,20 @@
     <script>
         // Load và mã hóa các file JS
         async function loadObfuscatedJS(file) {
-            const response = await fetch(file);
-            const code = await response.text();
-            const obfuscated = JavaScriptObfuscator.obfuscate(code);
-            const script = document.createElement('script');
-            script.textContent = obfuscated;
-            document.body.appendChild(script);
+            try {
+                const response = await fetch(file);
+                const code = await response.text();
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                const obfuscated = JavaScriptObfuscator.obfuscate(code);
+                script.textContent = obfuscated;
+                document.body.appendChild(script);
+            } catch(e) {
+                console.warn(`Failed to load ${file}`);
+            }
         }
 
-        // Load các file game đã được mã hóa
+        // Load các file game theo thứ tự
         const gameFiles = [
             'js/dice.js',
             'js/crash.js',
@@ -809,7 +814,13 @@
             'js/slot.js'
         ];
 
-        gameFiles.forEach(file => loadObfuscatedJS(file));
+        // Load tuần tự các file để đảm bảo thứ tự
+        async function loadAllGames() {
+            for(const file of gameFiles) {
+                await loadObfuscatedJS(file);
+            }
+        }
+        loadAllGames();
     </script>
 </body>
 </html> 

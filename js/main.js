@@ -147,11 +147,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.addEventListener('selectstart', e => e.preventDefault());
     document.addEventListener('copy', e => e.preventDefault());
     
-    // Chống debug console
-    console.log = function() {};
-    console.warn = function() {};
-    console.error = function() {};
+    // Giới hạn console log
+    const originalConsole = {
+        log: console.log,
+        warn: console.warn,
+        error: console.error
+    };
     
+    console.log = function(...args) {
+        if (process.env.NODE_ENV === 'development') {
+            originalConsole.log(...args);
+        }
+    };
+    
+    console.warn = function(...args) {
+        if (process.env.NODE_ENV === 'development') {
+            originalConsole.warn(...args);
+        }
+    };
+    
+    console.error = function(...args) {
+        if (process.env.NODE_ENV === 'development') {
+            originalConsole.error(...args);
+        }
+    };
+
     // Chống view source
     document.onkeydown = function(e) {
         if (e.ctrlKey && 
