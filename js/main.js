@@ -1,9 +1,6 @@
 let token; // Khai báo là biến toàn cục
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const API_URL = 'https://stake-clone-backend.onrender.com/api';
-    
-    // Kiểm tra đăng nhập và lấy số dư
     token = localStorage.getItem('token');
     if (!token) {
         window.location.href = 'auth.html';
@@ -147,8 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // API functions
-const API_URL = 'https://stake-clone-backend.onrender.com/api';
-
 async function login(username, password) {
     const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
