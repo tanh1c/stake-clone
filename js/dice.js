@@ -58,20 +58,48 @@ function calculateMultiplier(winChance) {
 }
 
 function addToHistory(result, won) {
-    const historyList = document.getElementById('betHistory');
+    const historyList = document.getElementById('diceHistory');
     const historyItem = document.createElement('div');
-    historyItem.className = `history-item ${won ? 'history-win' : 'history-lose'}`;
-    historyItem.textContent = result.toFixed(2);
+    historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
     
-    // Giới hạn lịch sử
-    if (historyList.children.length >= 10) {
-        historyList.firstChild.style.animation = 'popOut 0.3s ease forwards';
-        setTimeout(() => {
-            historyList.removeChild(historyList.firstChild);
-        }, 300);
+    const betAmount = document.getElementById('betAmount').value;
+    const winChance = document.getElementById('winChance').value;
+    const multiplier = calculateMultiplier(winChance);
+    
+    // Tính số tiền thắng/thua
+    const amount = won ? (betAmount * multiplier - betAmount) : betAmount;
+    
+    historyItem.innerHTML = `
+        <div class="history-details">
+            <span class="history-result">${result.toFixed(2)}</span>
+            <span class="history-amount ${won ? 'win' : 'lose'}">
+                ${won ? '+' : '-'}$${amount.toFixed(2)}
+            </span>
+        </div>
+        <div class="history-info">
+            <span>Bet: $${betAmount}</span>
+            <span>Chance: ${winChance}%</span>
+            <span>Multi: ${multiplier}x</span>
+        </div>
+    `;
+    
+    // Thêm vào đầu danh sách
+    if (historyList.firstChild) {
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    } else {
+        historyList.appendChild(historyItem);
     }
     
-    historyList.appendChild(historyItem);
+    // Giới hạn số lượng lịch sử
+    while (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Animation cho item mới
+    requestAnimationFrame(() => {
+        historyItem.style.opacity = '1';
+        historyItem.style.transform = 'translateY(0)';
+    });
 }
 
 function animateRoll(duration, finalNumber) {

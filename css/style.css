@@ -1743,4 +1743,61 @@ input:checked + .slider:before {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Dice History Styles */
+.history-list {
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.history-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.history-result {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.history-amount {
+    font-weight: bold;
+}
+
+.history-amount.win {
+    color: #00FF7F;
+}
+
+.history-amount.lose {
+    color: #FF4444;
+}
+
+.history-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+}
+
+.history-info span {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 6px;
+    border-radius: 3px;
 } 
