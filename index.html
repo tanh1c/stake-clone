@@ -783,15 +783,33 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/dice.js"></script>
-    <script src="js/crash.js"></script>
-    <script src="js/mines.js"></script>
-    <script src="js/roulette.js"></script>
-    <script src="js/plinko.js"></script>
-    <script src="js/blackjack.js"></script>
-    <script src="js/hilo.js"></script>
-    <script src="js/double-dice.js"></script>
-    <script src="js/limbo.js"></script>
-    <script src="js/slot.js"></script>
+    <script src="js/obfuscator.js"></script>
+    <script>
+        // Load và mã hóa các file JS
+        async function loadObfuscatedJS(file) {
+            const response = await fetch(file);
+            const code = await response.text();
+            const obfuscated = JavaScriptObfuscator.obfuscate(code);
+            const script = document.createElement('script');
+            script.textContent = obfuscated;
+            document.body.appendChild(script);
+        }
+
+        // Load các file game đã được mã hóa
+        const gameFiles = [
+            'js/dice.js',
+            'js/crash.js',
+            'js/mines.js',
+            'js/roulette.js', 
+            'js/plinko.js',
+            'js/blackjack.js',
+            'js/hilo.js',
+            'js/double-dice.js',
+            'js/limbo.js',
+            'js/slot.js'
+        ];
+
+        gameFiles.forEach(file => loadObfuscatedJS(file));
+    </script>
 </body>
 </html> 

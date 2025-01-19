@@ -141,6 +141,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Chống copy code
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
+    
+    // Chống debug console
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+    
+    // Chống view source
+    document.onkeydown = function(e) {
+        if (e.ctrlKey && 
+            (e.keyCode === 67 || 
+             e.keyCode === 86 || 
+             e.keyCode === 85 || 
+             e.keyCode === 117)) {
+            return false;
+        }
+    };
 });
 
 // API functions
