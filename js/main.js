@@ -17,15 +17,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         
-        if (!response.ok) {
-            throw new Error('Unauthorized');
+        if (response.status === 401) {
+            // Token hết hạn hoặc không hợp lệ
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html';
+            return;
         }
         
         const data = await response.json();
         updateBalanceDisplay(data.balance);
     } catch (error) {
         console.error('Auth error:', error);
-        window.location.href = 'auth.html';
+        // Chỉ chuyển hướng nếu thực sự cần thiết
+        if (!document.cookie.includes('token')) {
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html';
+        }
         return;
     }
 

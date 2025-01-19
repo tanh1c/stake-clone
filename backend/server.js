@@ -87,7 +87,11 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid password' });
         }
         
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
         console.log('Login successful:', username);
         res.json({ token, balance: user.balance });
     } catch (error) {
@@ -99,7 +103,11 @@ app.post('/api/login', async (req, res) => {
 // Middleware xác thực
 const auth = async (req, res, next) => {
     try {
-        const token = req.header('Authorization').replace('Bearer ', '');
+        const authHeader = req.header('Authorization');
+        if (!authHeader) {
+            throw new Error('No token provided');
+        }
+        const token = authHeader.replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findOne({ _id: decoded.userId });
         
@@ -110,24 +118,8 @@ const auth = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
+        console.error('Auth middleware error:', error);
         res.status(401).json({ error: 'Please authenticate' });
-    }
-};
-
-// Middleware kiểm tra token hết hạn
-const checkTokenExpiration = async (req, res, next) => {
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Kiểm tra thời gian hết hạn
-        if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-            throw new Error('Token expired');
-        }
-        
-        next();
-    } catch (error) {
-        res.status(401).json({ error: 'Token invalid or expired' });
     }
 };
 
@@ -150,11 +142,11 @@ const adminAuth = async (req, res, next) => {
 };
 
 // Protected routes
-app.get('/api/balance', [checkTokenExpiration, auth], async (req, res) => {
+app.get('/api/balance', auth, async (req, res) => {
     res.json({ balance: req.user.balance });
 });
 
-app.post('/api/updateBalance', [checkTokenExpiration, auth], async (req, res) => {
+app.post('/api/updateBalance', auth, async (req, res) => {
     try {
         const { amount } = req.body;
         req.user.balance += amount;
@@ -322,6 +314,29 @@ app.get('/api/leaderboard', auth, async (req, res) => {
         res.json({ players });
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+});
+
+// Thêm route refresh token
+app.post('/api/refresh-token', async (req, res) => {
+    try {
+        const oldToken = req.header('Authorization').replace('Bearer ', '');
+        const decoded = jwt.verify(oldToken, process.env.JWT_SECRET);
+        
+        const user = await User.findOne({ _id: decoded.userId });
+        if (!user) {
+            throw new Error();
+        }
+        
+        const newToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+        
+        res.json({ token: newToken });
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid token' });
     }
 });
 
