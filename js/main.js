@@ -10,6 +10,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // Game switching logic
+    const games = {
+        'dice': document.querySelector('[data-game="dice"]'),
+        'mines': document.querySelector('[data-game="mines"]'),
+        'crash': document.querySelector('[data-game="crash"]'),
+        'roulette': document.querySelector('[data-game="roulette"]'),
+        'plinko': document.querySelector('[data-game="plinko"]'),
+        'blackjack': document.querySelector('[data-game="blackjack"]'),
+        'hilo': document.querySelector('[data-game="hilo"]'),
+        'double-dice': document.querySelector('[data-game="double-dice"]'),
+        'limbo': document.querySelector('[data-game="limbo"]'),
+        'slot': document.querySelector('[data-game="slot"]')
+    };
+
+    // Check for selected game from menu and show it
+    const selectedGame = window.location.hash.substring(1) || localStorage.getItem('selectedGame');
+    if (selectedGame && games[selectedGame]) {
+        // Hide all games
+        Object.values(games).forEach(game => {
+            if (game) game.style.display = 'none';
+        });
+        // Show selected game
+        games[selectedGame].style.display = 'block';
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar nav ul li').forEach(item => {
+            item.classList.remove('active');
+            if (item.textContent.trim().toLowerCase() === selectedGame) {
+                item.classList.add('active');
+            }
+        });
+    }
+    // Clear selected game from localStorage but keep it in URL hash
+    localStorage.removeItem('selectedGame');
+
     try {
         const balanceResponse = await fetch(`${API_URL}/balance`, {
             headers: {
@@ -93,40 +127,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Game switching logic
-    const games = {
-        'dice': document.querySelector('[data-game="dice"]'),
-        'mines': document.querySelector('[data-game="mines"]'),
-        'crash': document.querySelector('[data-game="crash"]'),
-        'roulette': document.querySelector('[data-game="roulette"]'),
-        'plinko': document.querySelector('[data-game="plinko"]'),
-        'blackjack': document.querySelector('[data-game="blackjack"]'),
-        'hilo': document.querySelector('[data-game="hilo"]'),
-        'double-dice': document.querySelector('[data-game="double-dice"]'),
-        'limbo': document.querySelector('[data-game="limbo"]'),
-        'slot': document.querySelector('[data-game="slot"]')
-    };
-
-    // Check for selected game from menu
-    const selectedGame = localStorage.getItem('selectedGame');
-    if (selectedGame && games[selectedGame]) {
-        // Hide all games
-        Object.values(games).forEach(game => {
-            if (game) game.style.display = 'none';
-        });
-        // Show selected game
-        games[selectedGame].style.display = 'block';
-        // Update sidebar active state
-        document.querySelectorAll('.sidebar nav ul li').forEach(item => {
-            item.classList.remove('active');
-            if (item.textContent.trim().toLowerCase() === selectedGame) {
-                item.classList.add('active');
-            }
-        });
-        // Clear selected game
-        localStorage.removeItem('selectedGame');
-    }
-    
     // Handle sidebar navigation
     document.querySelectorAll('.sidebar nav ul li').forEach(item => {
         item.addEventListener('click', () => {
@@ -142,6 +142,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             if (games[gameName]) {
                 games[gameName].style.display = 'block';
+                // Update URL hash without reloading page
+                window.history.pushState(null, '', `#${gameName}`);
             }
         });
     });
