@@ -62,12 +62,12 @@ function addToHistory(result, won) {
     const historyItem = document.createElement('div');
     historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
     
-    const betAmount = document.getElementById('betAmount').value;
-    const winChance = document.getElementById('winChance').value;
+    const betAmount = parseFloat(document.getElementById('betAmount').value);
+    const winChance = parseFloat(document.getElementById('winChance').value);
     const multiplier = calculateMultiplier(winChance);
     
     // Tính số tiền thắng/thua
-    const amount = won ? (betAmount * multiplier - betAmount) : betAmount;
+    const amount = won ? (betAmount * parseFloat(multiplier) - betAmount) : betAmount;
     
     historyItem.innerHTML = `
         <div class="history-details">
@@ -77,7 +77,7 @@ function addToHistory(result, won) {
             </span>
         </div>
         <div class="history-info">
-            <span>Bet: $${betAmount}</span>
+            <span>Bet: $${betAmount.toFixed(2)}</span>
             <span>Chance: ${winChance}%</span>
             <span>Multi: ${multiplier}x</span>
         </div>
