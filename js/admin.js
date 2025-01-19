@@ -1,5 +1,3 @@
-const API_URL = 'http://localhost:3000/api';
-
 document.addEventListener('DOMContentLoaded', async () => {
     // Kiểm tra đăng nhập và quyền admin
     const token = localStorage.getItem('token');
@@ -9,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/check-admin', {
+        const response = await fetch(`${API_URL}/check-admin`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
