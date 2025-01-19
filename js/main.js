@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Game switching logic
+    // Kiểm tra và hiển thị game được chọn trước khi load balance
     const games = {
         'dice': document.querySelector('[data-game="dice"]'),
         'mines': document.querySelector('[data-game="mines"]'),
@@ -24,24 +24,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         'slot': document.querySelector('[data-game="slot"]')
     };
 
-    // Check for selected game from menu and show it
-    const selectedGame = window.location.hash.substring(1) || localStorage.getItem('selectedGame');
-    if (selectedGame && games[selectedGame]) {
-        // Hide all games
+    // Lấy game từ URL hash hoặc localStorage
+    const gameId = window.location.hash.substring(1) || localStorage.getItem('selectedGame');
+    if (gameId && games[gameId]) {
         Object.values(games).forEach(game => {
             if (game) game.style.display = 'none';
         });
-        // Show selected game
-        games[selectedGame].style.display = 'block';
-        // Update sidebar active state
+        games[gameId].style.display = 'block';
+        
         document.querySelectorAll('.sidebar nav ul li').forEach(item => {
             item.classList.remove('active');
-            if (item.textContent.trim().toLowerCase() === selectedGame) {
+            if (item.textContent.trim().toLowerCase() === gameId) {
                 item.classList.add('active');
             }
         });
     }
-    // Clear selected game from localStorage but keep it in URL hash
+
+    // Xóa selectedGame từ localStorage sau khi đã hiển thị game
     localStorage.removeItem('selectedGame');
 
     try {
@@ -79,8 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error('Error:', error);
-        // Chỉ chuyển hướng khi lỗi xác thực
-        if (error.message.includes('authentication') || error.message.includes('token')) {
+        if (error.message.includes('Failed to load')) {
             localStorage.removeItem('token');
             window.location.href = 'auth.html';
         }
@@ -142,7 +140,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             if (games[gameName]) {
                 games[gameName].style.display = 'block';
-                // Update URL hash without reloading page
                 window.history.pushState(null, '', `#${gameName}`);
             }
         });

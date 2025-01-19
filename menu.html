@@ -119,7 +119,80 @@
         </main>
     </div>
 
-    <script src="js/main.js"></script>
-    <script src="js/menu.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const API_URL = 'https://stake-clone-backend.onrender.com/api';
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                const balanceResponse = await fetch(`${API_URL}/balance`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!balanceResponse.ok) {
+                    throw new Error('Failed to load balance');
+                }
+
+                const balanceData = await balanceResponse.json();
+                document.querySelector('.balance').textContent = `Balance: $${balanceData.balance.toFixed(2)}`;
+
+                const profileResponse = await fetch(`${API_URL}/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!profileResponse.ok) {
+                    throw new Error('Failed to load profile');
+                }
+
+                const profileData = await profileResponse.json();
+                document.querySelector('.username').textContent = profileData.username;
+
+                // Handle game card clicks
+                document.querySelectorAll('.game-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const gameId = card.getAttribute('href').split('#')[1];
+                        localStorage.setItem('selectedGame', gameId);
+                    });
+                });
+
+                // Handle dropdown menu
+                const avatarBtn = document.getElementById('avatarBtn');
+                const dropdownMenu = document.querySelector('.dropdown-menu');
+
+                avatarBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+
+                // Handle logout
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    localStorage.removeItem('token');
+                    window.location.href = 'auth.html';
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                if (error.message.includes('Failed to load')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'auth.html';
+                }
+            }
+        });
+    </script>
 </body>
 </html> 
