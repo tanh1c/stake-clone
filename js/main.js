@@ -182,6 +182,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             return false;
         }
     };
+
+    // Chống debug cơ bản
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && 
+            (e.keyCode === 67 || 
+             e.keyCode === 86 || 
+             e.keyCode === 85 || 
+             e.keyCode === 117)) {
+            return false;
+        }
+    });
 });
 
 // API functions
