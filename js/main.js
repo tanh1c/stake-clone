@@ -142,56 +142,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Chống copy code
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('copy', e => e.preventDefault());
-    
-    // Giới hạn console log
-    const originalConsole = {
-        log: console.log,
-        warn: console.warn,
-        error: console.error
-    };
-    
-    console.log = function(...args) {
-        if (process.env.NODE_ENV === 'development') {
-            originalConsole.log(...args);
-        }
-    };
-    
-    console.warn = function(...args) {
-        if (process.env.NODE_ENV === 'development') {
-            originalConsole.warn(...args);
-        }
-    };
-    
-    console.error = function(...args) {
-        if (process.env.NODE_ENV === 'development') {
-            originalConsole.error(...args);
-        }
-    };
+    // Ngăn chặn debug
+    setInterval(() => {
+        Function("debugger")();
+    }, 100);
 
-    // Chống view source
-    document.onkeydown = function(e) {
-        if (e.ctrlKey && 
-            (e.keyCode === 67 || 
-             e.keyCode === 86 || 
-             e.keyCode === 85 || 
-             e.keyCode === 117)) {
-            return false;
-        }
-    };
-
-    // Chống debug cơ bản
+    // Vô hiệu hóa chuột phải
     document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Vô hiệu hóa phím tắt debug
     document.addEventListener('keydown', e => {
-        if (e.ctrlKey && 
-            (e.keyCode === 67 || 
-             e.keyCode === 86 || 
-             e.keyCode === 85 || 
-             e.keyCode === 117)) {
-            return false;
+        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+            e.preventDefault();
         }
     });
 });

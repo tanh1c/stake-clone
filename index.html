@@ -785,50 +785,25 @@
     <script src="js/main.js"></script>
     <script src="js/obfuscator.js"></script>
     <script>
-        // Chống debug cơ bản
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // Load và mã hóa các file JS
-        async function loadObfuscatedJS(file) {
-            try {
-                const response = await fetch(file);
-                const code = await response.text();
-                const script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.textContent = JavaScriptObfuscator.obfuscate(code);
-                document.body.appendChild(script);
-                // Đợi script load xong
-                await new Promise(resolve => script.onload = resolve);
-            } catch(e) {
-                console.warn(`Failed to load ${file}`);
-            }
-        }
-
-        // Danh sách các file game
-        const gameFiles = [
-            'js/dice.js',
-            'js/crash.js', 
-            'js/mines.js',
-            'js/roulette.js',
-            'js/plinko.js',
-            'js/blackjack.js',
-            'js/hilo.js',
-            'js/double-dice.js',
-            'js/limbo.js',
-            'js/slot.js'
+        // Load và mã hóa các file js
+        const gameScripts = [
+            'dice', 'crash', 'mines', 'roulette', 
+            'plinko', 'blackjack', 'hilo', 
+            'double-dice', 'limbo', 'slot'
         ];
 
-        // Load các file game
-        window.addEventListener('DOMContentLoaded', async () => {
-            for (const file of gameFiles) {
-                await loadObfuscatedJS(file);
-            }
+        gameScripts.forEach(game => {
+            fetch(`js/${game}.js`)
+                .then(response => response.text())
+                .then(code => {
+                    // Mã hóa code
+                    const encodedCode = obfuscateCode(code);
+                    
+                    // Tạo script element với code đã mã hóa
+                    const script = document.createElement('script');
+                    script.textContent = deobfuscateCode(encodedCode);
+                    document.body.appendChild(script);
+                });
         });
     </script>
 </body>
