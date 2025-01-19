@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 const app = express();
 
 app.use(cors({
-    origin: ['https://your-frontend-app.onrender.com', 'http://localhost:3000'],
+    origin: '*',  // Tạm thời cho phép tất cả các origin trong quá trình dev
     credentials: true
 }));
 app.use(express.json());
@@ -72,21 +72,26 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
     try {
+        console.log('Login attempt:', req.body);
         const { username, password } = req.body;
         const user = await User.findOne({ username });
         
         if (!user) {
+            console.log('User not found:', username);
             return res.status(401).json({ error: 'User not found' });
         }
         
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
+            console.log('Invalid password for user:', username);
             return res.status(401).json({ error: 'Invalid password' });
         }
         
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+        console.log('Login successful:', username);
         res.json({ token, balance: user.balance });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(400).json({ error: error.message });
     }
 });

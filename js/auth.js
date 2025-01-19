@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = 'http://localhost:3000/api';
+    const API_URL = 'https://stake-clone-backend.onrender.com/api';
     
     // Tab switching
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password })
             });
             
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Login failed');
+            }
+            
             const data = await response.json();
             
             if (data.token) {
@@ -49,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showError(loginForm, data.error);
             }
         } catch (error) {
+            console.error('Login error:', error);
             showError(loginForm, 'Đăng nhập thất bại. Vui lòng thử lại.');
         }
     });
