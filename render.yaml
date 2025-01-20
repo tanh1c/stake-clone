@@ -4,18 +4,10 @@ services:
     env: node
     buildCommand: cd backend && npm install
     startCommand: cd backend && node server.js
-    socketSupport: true
     envVars:
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         sync: false
       - key: PORT
-        value: 10000
-    headers:
-      - path: /*
-        name: Access-Control-Allow-Origin
-        value: "*"
-      - path: /*
-        name: Connection
-        value: "Upgrade" 
+        value: 10000 
