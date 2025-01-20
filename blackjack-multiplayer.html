@@ -8,6 +8,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <button onclick="backToMenu()" class="back-btn">Back to Menu</button>
+        </div>
         <div id="roomList" class="room-list">
             <h2>Available Rooms</h2>
             <div class="create-room">
@@ -55,11 +58,8 @@
 
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script>
-        // Kiểm tra đăng nhập
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        
-        if (!token || !userId) {
+        // Thêm link back to menu
+        function backToMenu() {
             window.location.href = 'menu.html';
         }
     </script>

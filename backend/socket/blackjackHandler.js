@@ -1,9 +1,26 @@
 const User = require('../models/User');
 const Room = require('../models/Room');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 module.exports = (io) => {
     const rooms = new Map();
+
+    // Middleware kiểm tra auth cho socket
+    io.use((socket, next) => {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error('Authentication error'));
+        }
+        
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            socket.userId = decoded.userId;
+            next();
+        } catch (err) {
+            next(new Error('Invalid token'));
+        }
+    });
 
     io.on('connection', (socket) => {
         console.log('User connected:', socket.id);

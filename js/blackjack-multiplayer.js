@@ -1,7 +1,10 @@
 const socket = io('https://stake-clone-backend.onrender.com', {
     reconnection: true,
     reconnectionAttempts: 5,
-    reconnectionDelay: 1000
+    reconnectionDelay: 1000,
+    auth: {
+        token: localStorage.getItem('token')
+    }
 });
 let currentRoom = null;
 
@@ -20,6 +23,13 @@ function playSound(soundName) {
 // Xử lý các sự kiện socket
 socket.on('connect', () => {
     console.log('Connected to server');
+});
+
+socket.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+    if (error.message === 'Invalid token') {
+        window.location.href = 'menu.html';
+    }
 });
 
 socket.on('error', (data) => {
@@ -183,8 +193,7 @@ function createRoom() {
     
     const userId = localStorage.getItem('userId');
     if (!userId) {
-        alert('Please login first');
-        window.location.href = 'auth.html';
+        window.location.href = 'menu.html';
         return;
     }
 
@@ -257,10 +266,6 @@ function updateTimer(endTime) {
         timerDiv.textContent = `Time left: ${seconds}s`;
     }, 1000);
 }
-
-socket.on('connect_error', (error) => {
-    console.error('Connection error:', error);
-});
 
 socket.on('reconnect', (attemptNumber) => {
     console.log('Reconnected on attempt:', attemptNumber);
