@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
+const User = require('./models/User');
 const BlackjackMultiplayer = require('./websocket/blackjackMultiplayer');
 
 const app = express();
@@ -69,24 +70,6 @@ app.use((req, res, next) => {
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGODB_URI);
-
-// User Model
-const userSchema = new mongoose.Schema({
-    username: { type: String, unique: true },
-    email: { type: String, unique: true },
-    password: String,
-    balance: { type: Number, default: 1000 },
-    isAdmin: { type: Boolean, default: false },
-    gameHistory: [{
-        game: String,
-        bet: Number,
-        result: String,
-        profit: Number,
-        timestamp: Date
-    }]
-});
-
-const User = mongoose.model('User', userSchema);
 
 // Giftcode Model
 const giftcodeSchema = new mongoose.Schema({
