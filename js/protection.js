@@ -1,43 +1,86 @@
-// Thêm protection script
+// Protection script - đặt ở đầu file
 (function() {
-    // Debugger trap để phát hiện và chặn DevTools
-    setInterval(() => {
-        debugger;
-        const start = new Date().getTime();
-        debugger;
-        const end = new Date().getTime();
+    // Chặn ngay khi script được load
+    if (window.devtools.isOpen) {
+        blockAccess();
+    }
+    
+    // Hàm chặn truy cập
+    function blockAccess() {
+        // Xóa toàn bộ nội dung
+        document.documentElement.innerHTML = '';
         
-        if ((end - start) > 100) { // Nếu thời gian xử lý > 100ms => DevTools đang mở
-            // Xóa toàn bộ nội dung trang
-            document.documentElement.innerHTML = '';
-            
-            // Chuyển hướng đến trang error
-            window.location.replace('error.html');
-            
-            // Vô hiệu hóa back button
+        // Chuyển hướng và chặn quay lại
+        window.location.replace('error.html');
+        history.pushState(null, '', 'error.html');
+        window.addEventListener('popstate', function() {
             history.pushState(null, '', 'error.html');
-            window.addEventListener('popstate', function() {
-                history.pushState(null, '', 'error.html');
-            });
-            
-            // Xóa localStorage để logout user
-            localStorage.clear();
+        });
+        
+        // Xóa localStorage
+        localStorage.clear();
+        
+        // Ngăn chặn việc load lại trang
+        window.onbeforeunload = () => false;
+    }
+
+    // DevTools detection
+    const devtools = {
+        isOpen: false,
+        orientation: undefined
+    };
+    
+    // Theo dõi liên tục
+    setInterval(() => {
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        
+        if (widthThreshold || heightThreshold) {
+            devtools.isOpen = true;
+            blockAccess();
+        }
+        
+        // Debugger trap
+        const start = performance.now();
+        debugger;
+        const end = performance.now();
+        if ((end - start) > 100) {
+            devtools.isOpen = true;
+            blockAccess();
         }
     }, 1000);
 
-    // Vô hiệu hóa chuột phải
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // Vô hiệu hóa phím F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-    document.addEventListener('keydown', function(e) {
+    // Chặn phím tắt
+    window.addEventListener('keydown', function(e) {
         if (
             e.key === 'F12' || 
             (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
             (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
         ) {
             e.preventDefault();
+            blockAccess();
         }
-    });
+    }, true);
+
+    // Chặn chuột phải
+    window.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        blockAccess();
+    }, true);
+
+    // Obfuscate code ngay khi load
+    const scripts = document.getElementsByTagName('script');
+    for(let script of scripts) {
+        if(script.src && !script.src.includes('protection.js')) {
+            const code = fetch(script.src)
+                .then(r => r.text())
+                .then(code => {
+                    script.textContent = btoa(encodeURIComponent(code));
+                    script.removeAttribute('src');
+                });
+        }
+    }
 
     // Mã hóa source code
     function obfuscateJS() {
