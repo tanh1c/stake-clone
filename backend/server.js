@@ -12,6 +12,9 @@ const { validateInput, handleValidation } = require('./middleware/validator');
 
 const app = express();
 
+// Thêm trust proxy setting
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(mongoSanitize());

@@ -86,4 +86,42 @@
     watermark.textContent = 'PROTECTED';
     document.body.appendChild(watermark);
 
+    // Obfuscate all JS files
+    function obfuscateAllJS() {
+        const scripts = document.getElementsByTagName('script');
+        
+        for(let script of scripts) {
+            if(script.src && !script.src.includes('protection.js')) {
+                fetch(script.src)
+                    .then(response => response.text())
+                    .then(code => {
+                        // Obfuscate code
+                        const obfuscated = `
+                            (function(){
+                                const _${Math.random().toString(36).substr(2,9)} = 
+                                    "${btoa(encodeURIComponent(code))}";
+                                eval(decodeURIComponent(atob(_${Math.random().toString(36).substr(2,9)})));
+                            })();
+                        `;
+                        
+                        // Replace original script with obfuscated version
+                        const newScript = document.createElement('script');
+                        newScript.type = 'text/javascript';
+                        newScript.textContent = obfuscated;
+                        script.parentNode.replaceChild(newScript, script);
+                    });
+            }
+        }
+        
+        // Remove source map comments
+        document.querySelectorAll('script').forEach(script => {
+            if(script.textContent) {
+                script.textContent = script.textContent.replace(/\/\/#\s*sourceMappingURL.*/g, '');
+            }
+        });
+    }
+
+    // Run obfuscation when page loads
+    document.addEventListener('DOMContentLoaded', obfuscateAllJS);
+
 })(); 
