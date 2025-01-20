@@ -14,7 +14,6 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
-app.use(basicLimiter);
 app.use(mongoSanitize());
 
 app.use(cors({
@@ -23,7 +22,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Áp dụng rate limiter cho routes cụ thể
+// Áp dụng rate limiter cho từng route cụ thể thay vì toàn bộ API
+app.use('/api/balance', basicLimiter);
+app.use('/api/profile', basicLimiter);
+app.use('/api/gameHistory', basicLimiter);
 app.use('/api/login', authLimiter);
 app.use('/api/register', authLimiter);
 app.use('/api/game', gameLimiter);

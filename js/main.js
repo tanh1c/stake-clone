@@ -234,4 +234,21 @@ function handleTouchEvents() {
 }
 
 // Call after DOM loaded
-document.addEventListener('DOMContentLoaded', handleTouchEvents); 
+document.addEventListener('DOMContentLoaded', handleTouchEvents);
+
+async function handleApiRequest(url, options) {
+    try {
+        const response = await fetch(url, options);
+        
+        if(response.status === 429) { // Rate limit status
+            const retryAfter = response.headers.get('Retry-After');
+            console.log(`Rate limited. Try again in ${retryAfter} seconds`);
+            // Có thể thêm thông báo cho user
+            return;
+        }
+        
+        return await response.json();
+    } catch(error) {
+        console.error('API request failed:', error);
+    }
+} 
