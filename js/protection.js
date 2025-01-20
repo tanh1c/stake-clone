@@ -58,35 +58,29 @@
 
         // Anti debug và dev tools được cập nhật
         initProtection() {
+            let devToolsCounter = 0;
+            const maxAttempts = 3;
+
             // Chặn debug bằng performance check
-            setInterval(() => {
-                debugger;
+            const debugCheck = () => {
                 const start = performance.now();
                 debugger;
                 const end = performance.now();
+                const diff = end - start;
                 
-                if(end - start > 100) {
-                    this.handleDevToolsOpen();
-                }
-            }, 1000);
-
-            // Chặn debug bằng console.log timing
-            const checkConsole = () => {
-                const before = performance.now();
-                console.log('Check');
-                console.clear();
-                const after = performance.now();
-                if (after - before > 100) {
-                    this.handleDevToolsOpen();
+                if(diff > 200) { // Tăng ngưỡng lên để tránh false positive
+                    devToolsCounter++;
+                    if(devToolsCounter >= maxAttempts) {
+                        this.handleDevToolsOpen();
+                    }
                 }
             };
-            setInterval(checkConsole, 1000);
+            setInterval(debugCheck, 1000);
 
             // Vô hiệu hóa tất cả phím tắt dev tools
             document.addEventListener('keydown', e => {
-                const cmdOrCtrl = e.ctrlKey || e.metaKey; // metaKey cho macOS
+                const cmdOrCtrl = e.ctrlKey || e.metaKey;
                 
-                // Danh sách các phím tắt cần chặn
                 const blocked = [
                     // Windows/Linux
                     e.key === 'F12',
@@ -120,19 +114,17 @@
                 return false;
             });
 
-            // Chặn các thuộc tính debug
-            Object.defineProperty(window, 'console', {
-                get: () => {
-                    this.handleDevToolsOpen();
-                    return {};
-                }
-            });
-
             // Theo dõi kích thước cửa sổ để phát hiện dev tools
-            const threshold = window.outerWidth - window.innerWidth > 160;
+            let resizeCounter = 0;
             window.addEventListener('resize', () => {
-                if (window.outerWidth - window.innerWidth > 160) {
-                    this.handleDevToolsOpen();
+                const widthDiff = window.outerWidth - window.innerWidth;
+                if (widthDiff > 200) { // Tăng ngưỡng lên
+                    resizeCounter++;
+                    if(resizeCounter >= 2) { // Yêu cầu nhiều lần phát hiện
+                        this.handleDevToolsOpen();
+                    }
+                } else {
+                    resizeCounter = 0;
                 }
             });
         },
