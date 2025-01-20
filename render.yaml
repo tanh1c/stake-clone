@@ -2,8 +2,16 @@ services:
   - type: web
     name: stake-clone-backend
     env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && node server.js
+    buildCommand: |
+      cd backend
+      npm install
+      mkdir -p models socket middleware
+      cp models/* models/
+      cp socket/* socket/
+      cp middleware/* middleware/
+    startCommand: |
+      cd backend
+      node server.js
     envVars:
       - key: MONGODB_URI
         sync: false
