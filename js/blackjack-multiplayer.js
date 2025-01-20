@@ -177,17 +177,31 @@ function createRoom() {
     const minBet = document.getElementById('minBet').value;
     const maxBet = document.getElementById('maxBet').value;
     
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        alert('Please login first');
+        window.location.href = 'auth.html';
+        return;
+    }
+
     socket.emit('createRoom', {
-        userId: localStorage.getItem('userId'),
-        minBet,
-        maxBet
+        userId: userId,
+        minBet: Number(minBet) || 1,
+        maxBet: Number(maxBet) || 1000
     });
 }
 
 function joinRoom(roomId) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        alert('Please login first');
+        window.location.href = 'auth.html';
+        return;
+    }
+
     socket.emit('joinRoom', {
-        roomId,
-        userId: localStorage.getItem('userId')
+        userId: userId,
+        roomId
     });
 }
 

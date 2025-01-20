@@ -12,6 +12,11 @@ module.exports = (io) => {
         socket.on('createRoom', async (data) => {
             try {
                 const { userId, minBet, maxBet } = data;
+                if (!userId) {
+                    socket.emit('error', { message: 'User ID is required' });
+                    return;
+                }
+
                 const user = await User.findById(userId);
                 
                 if (!user) {
@@ -42,6 +47,7 @@ module.exports = (io) => {
                 socket.emit('roomCreated', { roomId });
                 io.emit('roomList', await getRoomList());
             } catch (error) {
+                console.error('Create room error:', error);
                 socket.emit('error', { message: error.message });
             }
         });

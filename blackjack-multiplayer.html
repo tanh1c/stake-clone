@@ -54,6 +54,13 @@
     </div>
 
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        // Kiểm tra đăng nhập
+        if (!localStorage.getItem('token') || !localStorage.getItem('userId')) {
+            alert('Please login first');
+            window.location.href = 'auth.html';
+        }
+    </script>
     <script src="js/blackjack-multiplayer.js"></script>
 </body>
 </html> 

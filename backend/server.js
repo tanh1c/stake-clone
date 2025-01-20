@@ -119,18 +119,15 @@ app.post('/api/register', validateInput.register, handleValidation, async (req, 
 
 app.post('/api/login', validateInput.login, handleValidation, async (req, res) => {
     try {
-        console.log('Login attempt:', req.body);
         const { username, password } = req.body;
         const user = await User.findOne({ username }).select('+password');
         
         if (!user) {
-            console.log('User not found:', username);
             return res.status(401).json({ error: 'Invalid username or password' });
         }
         
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            console.log('Invalid password for user:', username);
             return res.status(401).json({ error: 'Invalid username or password' });
         }
         
@@ -143,14 +140,13 @@ app.post('/api/login', validateInput.login, handleValidation, async (req, res) =
             { expiresIn: '7d' }
         );
         
-        console.log('Login successful:', username);
         res.json({ 
             token,
             balance: user.balance,
-            username: user.username
+            username: user.username,
+            userId: user._id
         });
     } catch (error) {
-        console.error('Login error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
