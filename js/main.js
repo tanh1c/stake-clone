@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         'hilo': document.querySelector('[data-game="hilo"]'),
         'double-dice': document.querySelector('[data-game="double-dice"]'),
         'limbo': document.querySelector('[data-game="limbo"]'),
-        'slot': document.querySelector('[data-game="slot"]')
+        'slot': document.querySelector('[data-game="slot"]'),
+        'flappy': document.querySelector('[data-game="flappy"]')
     };
 
     // Lấy game từ URL hash hoặc localStorage
