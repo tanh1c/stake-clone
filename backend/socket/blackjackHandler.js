@@ -9,22 +9,14 @@ module.exports = (io) => {
     // Middleware kiểm tra auth cho socket
     io.use((socket, next) => {
         const token = socket.handshake.auth.token;
-        const userId = socket.handshake.auth.userId;
 
         if (!token) {
             return next(new Error('No token provided'));
         }
         
-        if (!userId) {
-            return next(new Error('No userId provided'));
-        }
-        
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            if (decoded.userId !== userId) {
-                return next(new Error('Invalid userId'));
-            }
-            socket.userId = userId;
+            socket.userId = decoded.userId;
             console.log('Socket auth success:', socket.userId);
             next();
         } catch (err) {
@@ -61,14 +53,11 @@ module.exports = (io) => {
         // Tạo phòng mới
         socket.on('createRoom', async (data) => {
             try {
-                const { userId, minBet, maxBet } = data;
+                const { minBet, maxBet } = data;
+                const userId = socket.userId;
+                
                 console.log('Creating room:', data);
                 
-                if (!userId) {
-                    socket.emit('error', { message: 'User ID is required' });
-                    return;
-                }
-
                 const user = await User.findById(userId);
                 
                 if (!user) {

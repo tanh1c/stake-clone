@@ -54,17 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (data.token) {
-                localStorage.setItem('token', `Bearer ${data.token}`);
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('balance', data.balance);
-                console.log('Setting userId:', data.userId);
                 localStorage.setItem('userId', data.userId);
-                // Kiểm tra xem đã lưu thành công chưa
-                const savedUserId = localStorage.getItem('userId');
-                if (savedUserId) {
-                    window.location.href = 'menu.html';
-                } else {
-                    alert('Login failed - Could not save user data');
-                }
+                localStorage.setItem('username', data.username);
+                window.location.href = 'menu.html';
             }
         } catch (error) {
             console.error('Login error:', error);
