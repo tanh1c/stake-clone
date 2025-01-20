@@ -1,5 +1,30 @@
 // Thêm protection script
 (function() {
+    // Debugger trap để phát hiện và chặn DevTools
+    setInterval(() => {
+        debugger;
+        const start = new Date().getTime();
+        debugger;
+        const end = new Date().getTime();
+        
+        if ((end - start) > 100) { // Nếu thời gian xử lý > 100ms => DevTools đang mở
+            // Xóa toàn bộ nội dung trang
+            document.documentElement.innerHTML = '';
+            
+            // Chuyển hướng đến trang error
+            window.location.replace('error.html');
+            
+            // Vô hiệu hóa back button
+            history.pushState(null, '', 'error.html');
+            window.addEventListener('popstate', function() {
+                history.pushState(null, '', 'error.html');
+            });
+            
+            // Xóa localStorage để logout user
+            localStorage.clear();
+        }
+    }, 1000);
+
     // Vô hiệu hóa chuột phải
     document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -13,19 +38,6 @@
             e.preventDefault();
         }
     });
-
-    // Vô hiệu hóa DevTools
-    function detectDevTools() {
-        const widthThreshold = window.outerWidth - window.innerWidth > 160;
-        const heightThreshold = window.outerHeight - window.innerHeight > 160;
-        
-        if(widthThreshold || heightThreshold) {
-            document.body.innerHTML = ''; // Xóa nội dung
-            window.location.href = 'error.html'; // Chuyển hướng
-        }
-    }
-
-    setInterval(detectDevTools, 1000);
 
     // Mã hóa source code
     function obfuscateJS() {
