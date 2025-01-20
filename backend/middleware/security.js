@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const User = require('../models/user');
 
 // Middleware xác thực JWT an toàn hơn
 const auth = async (req, res, next) => {
