@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
+const path = require('path');
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(helmet());
 app.use(mongoSanitize());
 
 app.use(cors({
-    origin: '*',  // Tạm thời cho phép tất cả các origin trong quá trình dev
+    origin: ['https://your-frontend-domain.com', 'http://localhost:3000'],
     credentials: true
 }));
 app.use(express.json());
@@ -32,6 +33,20 @@ app.use('/api/gameHistory', basicLimiter);
 app.use('/api/login', authLimiter);
 app.use('/api/register', authLimiter);
 app.use('/api/game', gameLimiter);
+
+// Thêm vào sau các middleware security
+app.use('/js', express.static(path.join(__dirname, 'js'), {
+    setHeaders: (res, path) => {
+        // Thêm header để ngăn truy cập trực tiếp
+        res.set({
+            'Content-Type': 'application/javascript',
+            'X-Content-Type-Options': 'nosniff',
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+    }
+}));
 
 // DDoS protection middleware
 app.use((req, res, next) => {
