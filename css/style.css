@@ -1800,4 +1800,66 @@ input:checked + .slider:before {
     background: rgba(255, 255, 255, 0.05);
     padding: 2px 6px;
     border-radius: 3px;
+}
+
+/* Common Bet Amount Input Styles */
+.bet-amount-container {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.bet-amount-label {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.bet-amount-input {
+    width: 100%;
+    background: #1A242D;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 12px;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.bet-amount-input:focus {
+    border-color: #00FF7F;
+    box-shadow: 0 0 0 2px rgba(0,255,127,0.2);
+}
+
+.bet-amount-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.bet-control-btn {
+    flex: 1;
+    padding: 8px;
+    background: #2A3C48;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bet-control-btn:hover {
+    background: #3A4C58;
+}
+
+.bet-control-btn.max {
+    background: #00FF7F;
+    color: #0F1923;
+}
+
+.bet-control-btn.max:hover {
+    background: #00CC6A;
 } 

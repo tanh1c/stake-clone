@@ -295,13 +295,13 @@
                 <h2>Roulette</h2>
                 <div class="roulette-game">
                     <div class="roulette-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="rouletteBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfRouletteBet">½</button>
-                                <button id="doubleRouletteBet">2×</button>
-                                <button id="maxRouletteBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="rouletteBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('rouletteBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('rouletteBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('rouletteBetAmount')">Max</button>
                             </div>
                         </div>
                         <div class="current-bets" id="currentBets"></div>
@@ -337,13 +337,13 @@
                 <h2>Plinko</h2>
                 <div class="plinko-game">
                     <div class="plinko-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="plinkoBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfPlinkoBet">½</button>
-                                <button id="doublePlinkoBet">2×</button>
-                                <button id="maxPlinkoBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="plinkoBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('plinkoBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('plinkoBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('plinkoBetAmount')">Max</button>
                             </div>
                         </div>
                         <div class="risk-selector">
@@ -393,13 +393,13 @@
                 <h2>Blackjack</h2>
                 <div class="blackjack-game">
                     <div class="blackjack-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="blackjackBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfBlackjackBet">½</button>
-                                <button id="doubleBlackjackBet">2×</button>
-                                <button id="maxBlackjackBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="blackjackBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('blackjackBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('blackjackBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('blackjackBetAmount')">Max</button>
                             </div>
                         </div>
                     </div>
@@ -435,13 +435,13 @@
                 <h2>HiLo</h2>
                 <div class="hilo-game">
                     <div class="hilo-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="hiloBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfHiloBet">½</button>
-                                <button id="doubleHiloBet">2×</button>
-                                <button id="maxHiloBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="hiloBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('hiloBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('hiloBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('hiloBetAmount')">Max</button>
                             </div>
                         </div>
                     </div>
@@ -516,13 +516,13 @@
                 <h2>Double Dice</h2>
                 <div class="double-dice-game">
                     <div class="double-dice-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="doubleDiceBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfDoubleDiceBet">½</button>
-                                <button id="doubleDoubleDiceBet">2×</button>
-                                <button id="maxDoubleDiceBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="doubleDiceBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('doubleDiceBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('doubleDiceBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('doubleDiceBetAmount')">Max</button>
                             </div>
                         </div>
                     </div>
@@ -638,13 +638,13 @@
                 <h2>Limbo</h2>
                 <div class="limbo-game">
                     <div class="limbo-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="limboBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfLimboBet">½</button>
-                                <button id="doubleLimboBet">2×</button>
-                                <button id="maxLimboBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="limboBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('limboBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('limboBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('limboBetAmount')">Max</button>
                             </div>
                         </div>
                         <div class="target-multiplier">
@@ -680,13 +680,13 @@
                 <h2>Slot Machine</h2>
                 <div class="slot-game">
                     <div class="slot-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="slotBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfSlotBet">½</button>
-                                <button id="doubleSlotBet">2×</button>
-                                <button id="maxSlotBet">Max</button>
+                        <div class="bet-amount-container">
+                            <div class="bet-amount-label">Bet Amount</div>
+                            <input type="number" id="slotBetAmount" class="bet-amount-input" value="1.00">
+                            <div class="bet-amount-controls">
+                                <button class="bet-control-btn" onclick="halfBet('slotBetAmount')">1/2</button>
+                                <button class="bet-control-btn" onclick="doubleBet('slotBetAmount')">2x</button>
+                                <button class="bet-control-btn max" onclick="maxBet('slotBetAmount')">Max</button>
                             </div>
                         </div>
                     </div>
