@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
+const crypto = require('crypto');
 
 const app = express();
 
@@ -87,6 +88,94 @@ const giftcodeSchema = new mongoose.Schema({
 });
 
 const Giftcode = mongoose.model('Giftcode', giftcodeSchema);
+
+// Game logic handler
+app.post('/api/game/play', auth, async (req, res) => {
+    try {
+        const { gameType, betAmount, gameData } = req.body;
+        
+        // Kiểm tra số dư
+        if (req.user.balance < betAmount) {
+            return res.status(400).json({ error: 'Insufficient balance' });
+        }
+
+        // Xử lý game logic ở server
+        let result;
+        switch(gameType) {
+            case 'dice':
+                result = handleDiceGame(betAmount, gameData);
+                break;
+            case 'crash':
+                result = handleCrashGame(betAmount, gameData); 
+                break;
+            // Thêm các game khác...
+        }
+
+        // Cập nhật số dư trong transaction
+        await mongoose.startSession().then(async (session) => {
+            session.startTransaction();
+            try {
+                // Cập nhật số dư
+                const updatedUser = await User.findByIdAndUpdate(
+                    req.user._id,
+                    { $inc: { balance: result.profit } },
+                    { new: true, session }
+                );
+
+                // Lưu lịch sử game
+                await GameHistory.create([{
+                    userId: req.user._id,
+                    gameType,
+                    betAmount,
+                    profit: result.profit,
+                    gameData: result.gameData
+                }], { session });
+
+                await session.commitTransaction();
+                res.json({
+                    balance: updatedUser.balance,
+                    gameResult: result.gameData
+                });
+            } catch (error) {
+                await session.abortTransaction();
+                throw error;
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Game processing failed' });
+    }
+});
+
+// Game logic functions
+function handleDiceGame(betAmount, gameData) {
+    // Server-side random number generation
+    const serverSeed = crypto.randomBytes(32).toString('hex');
+    const clientSeed = gameData.clientSeed;
+    const nonce = Date.now();
+    
+    // Tạo số ngẫu nhiên dựa trên seeds
+    const hash = crypto.createHmac('sha256', serverSeed)
+        .update(clientSeed + nonce)
+        .digest('hex');
+    
+    const roll = parseInt(hash.substr(0, 8), 16) % 10000 / 100;
+    
+    // Tính toán kết quả
+    const won = roll <= gameData.target;
+    const multiplier = 99 / gameData.target;
+    const profit = won ? betAmount * multiplier - betAmount : -betAmount;
+
+    return {
+        profit,
+        gameData: {
+            roll,
+            serverSeed,
+            clientSeed,
+            nonce
+        }
+    };
+}
 
 // Routes
 app.post('/api/register', validateInput.register, handleValidation, async (req, res) => {

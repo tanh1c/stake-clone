@@ -48,7 +48,46 @@ const handleValidation = (req, res, next) => {
     next();
 };
 
+const gameValidation = [
+    body('data').custom((value, { req }) => {
+        try {
+            // Decrypt data
+            const decrypted = decrypt(value);
+            
+            // Validate timestamp để tránh replay attacks
+            const timestamp = decrypted.timestamp;
+            if (Date.now() - timestamp > 5000) { // 5 giây
+                throw new Error('Request expired');
+            }
+            
+            // Validate game data
+            if (!isValidGameData(decrypted.gameType, decrypted.gameData)) {
+                throw new Error('Invalid game data');
+            }
+            
+            // Attach decrypted data to request
+            req.gameData = decrypted;
+            return true;
+        } catch (error) {
+            throw new Error('Invalid request data');
+        }
+    })
+];
+
+function isValidGameData(gameType, data) {
+    switch(gameType) {
+        case 'dice':
+            return data.target >= 1 && data.target <= 95;
+        case 'crash':
+            return data.cashoutAt >= 1.01;
+        // Thêm validation cho các game khác
+        default:
+            return false;
+    }
+}
+
 module.exports = {
     validateInput,
-    handleValidation
+    handleValidation,
+    gameValidation
 }; 

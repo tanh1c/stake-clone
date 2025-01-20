@@ -251,4 +251,58 @@ async function handleApiRequest(url, options) {
     } catch(error) {
         console.error('API request failed:', error);
     }
+}
+
+// Thêm encryption helper
+const encryption = {
+    key: null,
+
+    async initialize() {
+        // Lấy public key từ server
+        const response = await fetch(`${API_URL}/encryption-key`);
+        const { publicKey } = await response.json();
+        this.key = await window.crypto.subtle.importKey(
+            'spki',
+            this._base64ToArrayBuffer(publicKey),
+            {
+                name: 'RSA-OAEP',
+                hash: 'SHA-256'
+            },
+            true,
+            ['encrypt']
+        );
+    },
+
+    async encrypt(data) {
+        const encoded = new TextEncoder().encode(JSON.stringify(data));
+        const encrypted = await window.crypto.subtle.encrypt(
+            {
+                name: 'RSA-OAEP'
+            },
+            this.key,
+            encoded
+        );
+        return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+    }
+};
+
+// Sử dụng encryption cho API calls
+async function makeGameAction(gameType, betAmount, gameData) {
+    const encryptedData = await encryption.encrypt({
+        gameType,
+        betAmount,
+        gameData,
+        timestamp: Date.now()
+    });
+
+    const response = await fetch(`${API_URL}/game/play`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ data: encryptedData })
+    });
+
+    return await response.json();
 } 
