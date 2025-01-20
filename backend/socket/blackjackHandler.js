@@ -8,6 +8,17 @@ module.exports = (io) => {
     io.on('connection', (socket) => {
         console.log('User connected:', socket.id);
         
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+
+        socket.on('error', (error) => {
+            console.error('Socket error:', error);
+            if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                socket.connect();
+            }
+        });
+
         // Tạo phòng mới
         socket.on('createRoom', async (data) => {
             try {
@@ -252,6 +263,23 @@ module.exports = (io) => {
                 }
             } catch (error) {
                 console.error('Disconnect error:', error);
+            }
+        });
+
+        socket.on('rejoinRoom', async (data) => {
+            try {
+                const { roomId, userId } = data;
+                const room = await Room.findOne({ roomId });
+                
+                if (room && room.players.some(p => p.userId.toString() === userId)) {
+                    socket.join(roomId);
+                    socket.emit('gameState', {
+                        players: room.players,
+                        currentTurn: room.currentTurn
+                    });
+                }
+            } catch (error) {
+                socket.emit('error', { message: error.message });
             }
         });
     });

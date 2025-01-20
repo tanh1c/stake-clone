@@ -1,4 +1,8 @@
-const socket = io('https://stake-clone-backend.onrender.com');
+const socket = io('https://stake-clone-backend.onrender.com', {
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000
+});
 let currentRoom = null;
 
 const sounds = {
@@ -252,4 +256,18 @@ function updateTimer(endTime) {
         const seconds = Math.floor(timeLeft / 1000);
         timerDiv.textContent = `Time left: ${seconds}s`;
     }, 1000);
-} 
+}
+
+socket.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+});
+
+socket.on('reconnect', (attemptNumber) => {
+    console.log('Reconnected on attempt:', attemptNumber);
+    if (currentRoom) {
+        socket.emit('rejoinRoom', {
+            roomId: currentRoom,
+            userId: localStorage.getItem('userId')
+        });
+    }
+}); 

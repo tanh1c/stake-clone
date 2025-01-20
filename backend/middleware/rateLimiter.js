@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 // Rate limiter cơ bản sử dụng memory store
 const basicLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 phút
-    max: 100, // Giới hạn 100 request mỗi IP trong 15 phút
+    max: 1000, // Tăng giới hạn lên 1000 request
     message: {
         error: 'Quá nhiều request, vui lòng thử lại sau.'
     }
@@ -27,8 +27,22 @@ const gameLimiter = rateLimit({
     }
 });
 
+// Whitelist một số routes không cần rate limit
+const skipPaths = [
+    '/api/balance',
+    '/api/refresh-token'
+];
+
+const configuredLimiter = (req, res, next) => {
+    if (skipPaths.includes(req.path)) {
+        return next();
+    }
+    return basicLimiter(req, res, next);
+};
+
 module.exports = {
     basicLimiter,
     authLimiter,
-    gameLimiter
+    gameLimiter,
+    configuredLimiter
 }; 

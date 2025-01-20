@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
-const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
+const { basicLimiter, authLimiter, gameLimiter, configuredLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
@@ -27,7 +27,7 @@ require('./socket/blackjackHandler')(io);
 
 // Security middleware
 app.use(helmet());
-app.use(basicLimiter);
+app.use(configuredLimiter);
 app.use(mongoSanitize());
 
 app.use(cors({
