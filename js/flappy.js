@@ -27,7 +27,7 @@ const FlappyGame = {
         // Setup event listeners
         this.setupEventListeners();
         
-        // Initial pipe
+        // Initial pipes
         this.addPipe();
         
         // Start animation loop
@@ -111,57 +111,63 @@ const FlappyGame = {
     },
     
     animate() {
+        // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // Draw background
-        this.ctx.fillStyle = '#70c5ce';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // Draw bird
-        this.ctx.fillStyle = '#f7d51d';
-        this.ctx.beginPath();
-        this.ctx.arc(this.bird.x, this.bird.y, this.bird.size, 0, Math.PI * 2);
-        this.ctx.fill();
         
         if (this.isPlaying) {
             // Update bird position
             this.bird.velocity += this.bird.gravity;
             this.bird.y += this.bird.velocity;
             
-            // Update pipes
-            for (let pipe of this.pipes) {
-                pipe.x -= 3;
+            // Draw bird
+            this.ctx.fillStyle = '#FFD700';
+            this.ctx.beginPath();
+            this.ctx.arc(this.bird.x, this.bird.y, this.bird.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Update and draw pipes
+            for (let i = this.pipes.length - 1; i >= 0; i--) {
+                const pipe = this.pipes[i];
+                pipe.x -= 2; // Tốc độ di chuyển của ống
                 
                 // Draw pipes
-                this.ctx.fillStyle = '#2ecc71';
+                this.ctx.fillStyle = '#00FF7F';
+                // Top pipe
                 this.ctx.fillRect(pipe.x, 0, pipe.width, pipe.topHeight);
+                // Bottom pipe
                 this.ctx.fillRect(pipe.x, pipe.bottomY, pipe.width, this.canvas.height - pipe.bottomY);
+                
+                // Check if pipe is passed
+                if (!pipe.passed && this.bird.x > pipe.x + pipe.width) {
+                    pipe.passed = true;
+                    this.pipesPassed++;
+                    this.currentMultiplier += 0.5;
+                    document.getElementById('currentMultiplier').textContent = 
+                        `Multiplier: ${this.currentMultiplier.toFixed(2)}x`;
+                }
                 
                 // Check collision
                 if (this.checkCollision(pipe)) {
                     this.gameOver();
-                    break;
+                    return;
                 }
                 
-                // Check if passed pipe
-                if (!pipe.passed && pipe.x + pipe.width < this.bird.x) {
-                    pipe.passed = true;
-                    this.pipesPassed++;
-                    this.currentMultiplier = 1 + (this.pipesPassed * 0.5);
-                    document.getElementById('currentMultiplier').textContent = 
-                        `Multiplier: ${this.currentMultiplier.toFixed(2)}x`;
+                // Remove pipe if it's off screen
+                if (pipe.x + pipe.width < 0) {
+                    this.pipes.splice(i, 1);
                 }
             }
             
-            // Remove off-screen pipes and add new ones
-            if (this.pipes[0].x < -50) {
-                this.pipes.shift();
+            // Add new pipe when needed
+            if (this.pipes.length === 0 || 
+                this.pipes[this.pipes.length - 1].x < this.canvas.width - 300) {
                 this.addPipe();
             }
             
             // Check boundaries
             if (this.bird.y < 0 || this.bird.y > this.canvas.height) {
                 this.gameOver();
+                return;
             }
         }
         
