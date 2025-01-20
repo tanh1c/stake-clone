@@ -7,27 +7,17 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
-const { basicLimiter, authLimiter, gameLimiter, configuredLimiter } = require('./middleware/rateLimiter');
+const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
-const { createServer } = require('http');
-const { Server } = require('socket.io');
-const User = require('./models/User');
+const http = require('http');
+const socketIO = require('socket.io');
+const BlackjackRoom = require('./models/BlackjackRoom');
 
 const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST']
-    }
-});
-
-// Socket.IO handlers
-require('./socket/blackjackHandler')(io);
 
 // Security middleware
 app.use(helmet());
-app.use(configuredLimiter);
+app.use(basicLimiter);
 app.use(mongoSanitize());
 
 app.use(cors({
@@ -69,6 +59,24 @@ app.use((req, res, next) => {
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGODB_URI);
+
+// User Model
+const userSchema = new mongoose.Schema({
+    username: { type: String, unique: true },
+    email: { type: String, unique: true },
+    password: String,
+    balance: { type: Number, default: 1000 },
+    isAdmin: { type: Boolean, default: false },
+    gameHistory: [{
+        game: String,
+        bet: Number,
+        result: String,
+        profit: Number,
+        timestamp: Date
+    }]
+});
+
+const User = mongoose.model('User', userSchema);
 
 // Giftcode Model
 const giftcodeSchema = new mongoose.Schema({
@@ -119,15 +127,18 @@ app.post('/api/register', validateInput.register, handleValidation, async (req, 
 
 app.post('/api/login', validateInput.login, handleValidation, async (req, res) => {
     try {
+        console.log('Login attempt:', req.body);
         const { username, password } = req.body;
         const user = await User.findOne({ username }).select('+password');
         
         if (!user) {
+            console.log('User not found:', username);
             return res.status(401).json({ error: 'Invalid username or password' });
         }
         
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
+            console.log('Invalid password for user:', username);
             return res.status(401).json({ error: 'Invalid username or password' });
         }
         
@@ -140,13 +151,14 @@ app.post('/api/login', validateInput.login, handleValidation, async (req, res) =
             { expiresIn: '7d' }
         );
         
+        console.log('Login successful:', username);
         res.json({ 
             token,
             balance: user.balance,
-            username: user.username,
-            userId: user._id.toString()
+            username: user.username
         });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -402,6 +414,197 @@ app.post('/api/game/bet', auth, validateInput.gameAction, handleValidation, asyn
     // ... code xử lý game
 });
 
+// Tạo HTTP server
+const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    },
+    transports: ['websocket'],
+    pingTimeout: 60000,
+    pingInterval: 25000
+});
+
+// Handle WebSocket errors
+io.on('connect_error', (err) => {
+    console.log('Socket connection error:', err);
+});
+
+io.on('connect_timeout', () => {
+    console.log('Socket connection timeout');
+});
+
+// WebSocket handlers
+io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
+    
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+    });
+    
+    socket.on('error', (error) => {
+        console.error('Socket error:', error);
+    });
+    
+    // Tham gia phòng
+    socket.on('joinRoom', async (data) => {
+        try {
+            const { roomId, userId, username } = data;
+            let room = await BlackjackRoom.findOne({ roomId });
+            
+            if (!room) {
+                room = new BlackjackRoom({
+                    roomId,
+                    players: [{
+                        userId,
+                        username,
+                        cards: [],
+                        bet: 0
+                    }]
+                });
+            } else if (room.players.length < 7) { // Max 7 players
+                room.players.push({
+                    userId,
+                    username,
+                    cards: [],
+                    bet: 0
+                });
+            }
+            
+            await room.save();
+            socket.join(roomId);
+            io.to(roomId).emit('roomUpdate', room);
+        } catch (error) {
+            socket.emit('error', error.message);
+        }
+    });
+    
+    // Đặt cược
+    socket.on('placeBet', async (data) => {
+        try {
+            const { roomId, userId, bet } = data;
+            const room = await BlackjackRoom.findOne({ roomId });
+            
+            const player = room.players.find(p => p.userId.toString() === userId);
+            if (player) {
+                player.bet = bet;
+                player.ready = true;
+                await room.save();
+                
+                // Kiểm tra nếu tất cả người chơi đã sẵn sàng
+                if (room.players.every(p => p.ready)) {
+                    startGame(room);
+                }
+                
+                io.to(roomId).emit('roomUpdate', room);
+            }
+        } catch (error) {
+            socket.emit('error', error.message);
+        }
+    });
+    
+    // Rút bài
+    socket.on('hit', async (data) => {
+        try {
+            const { roomId, userId } = data;
+            const room = await BlackjackRoom.findOne({ roomId });
+            
+            const playerIndex = room.players.findIndex(p => p.userId.toString() === userId);
+            if (playerIndex === room.currentTurn) {
+                const card = room.deck.pop();
+                room.players[playerIndex].cards.push(card);
+                
+                // Kiểm tra bust
+                if (calculateHandValue(room.players[playerIndex].cards) > 21) {
+                    room.players[playerIndex].stand = true;
+                    nextTurn(room);
+                }
+                
+                await room.save();
+                io.to(roomId).emit('roomUpdate', room);
+            }
+        } catch (error) {
+            socket.emit('error', error.message);
+        }
+    });
+    
+    // Dừng
+    socket.on('stand', async (data) => {
+        try {
+            const { roomId, userId } = data;
+            const room = await BlackjackRoom.findOne({ roomId });
+            
+            const playerIndex = room.players.findIndex(p => p.userId.toString() === userId);
+            if (playerIndex === room.currentTurn) {
+                room.players[playerIndex].stand = true;
+                nextTurn(room);
+                await room.save();
+                io.to(roomId).emit('roomUpdate', room);
+            }
+        } catch (error) {
+            socket.emit('error', error.message);
+        }
+    });
+});
+
+// Helper functions
+function startGame(room) {
+    room.deck = createDeck();
+    room.dealerCards = [room.deck.pop(), room.deck.pop()];
+    
+    room.players.forEach(player => {
+        player.cards = [room.deck.pop(), room.deck.pop()];
+        player.stand = false;
+    });
+    
+    room.status = 'playing';
+    room.currentTurn = 0;
+}
+
+function nextTurn(room) {
+    do {
+        room.currentTurn++;
+        if (room.currentTurn >= room.players.length) {
+            dealerPlay(room);
+            endGame(room);
+            return;
+        }
+    } while (room.players[room.currentTurn].stand);
+}
+
+function dealerPlay(room) {
+    while (calculateHandValue(room.dealerCards) < 17) {
+        room.dealerCards.push(room.deck.pop());
+    }
+}
+
+function endGame(room) {
+    const dealerValue = calculateHandValue(room.dealerCards);
+    
+    room.players.forEach(async (player) => {
+        const playerValue = calculateHandValue(player.cards);
+        let winAmount = 0;
+        
+        if (playerValue <= 21) {
+            if (dealerValue > 21 || playerValue > dealerValue) {
+                winAmount = player.bet * 2;
+            } else if (playerValue === dealerValue) {
+                winAmount = player.bet;
+            }
+        }
+        
+        // Update user balance
+        if (winAmount > 0) {
+            await User.findByIdAndUpdate(player.userId, {
+                $inc: { balance: winAmount }
+            });
+        }
+    });
+    
+    room.status = 'finished';
+}
+
 const PORT = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
-httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 

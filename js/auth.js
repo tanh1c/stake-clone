@@ -55,9 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data.token) {
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('balance', data.balance);
-                localStorage.setItem('userId', data.userId);
-                localStorage.setItem('username', data.username);
                 window.location.href = 'menu.html';
             }
         } catch (error) {

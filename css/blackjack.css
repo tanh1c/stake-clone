@@ -352,4 +352,39 @@
 .card-back i {
     opacity: 0.5;
     transform: rotate(45deg);
+}
+
+.multiplayer-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.players-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.player {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 200px;
+}
+
+.player.active {
+    box-shadow: 0 0 10px rgba(0,255,127,0.5);
+}
+
+.player h4 {
+    margin: 0 0 10px;
+    color: #00FF7F;
+}
+
+.bet {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
 } 

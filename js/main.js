@@ -141,17 +141,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
-
-    // Thêm vào phần xử lý menu
-    document.querySelectorAll('.sidebar li').forEach(item => {
-        item.addEventListener('click', () => {
-            const game = item.textContent.trim();
-            if (game === 'Blackjack Multiplayer') {
-                window.location.href = 'blackjack-multiplayer.html';
-            }
-            // ... các game khác
-        });
-    });
 });
 
 // API functions

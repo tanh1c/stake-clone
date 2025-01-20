@@ -444,3 +444,135 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
+
+const socket = io(WS_URL, {
+    transports: ['websocket'],
+    upgrade: false,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000
+});
+let currentRoom = null;
+
+// Socket event handlers
+socket.on('roomUpdate', (room) => {
+    currentRoom = room;
+    updateUI();
+});
+
+socket.on('error', (error) => {
+    console.error('Socket error:', error);
+    // Show error to user
+});
+
+socket.on('disconnect', () => {
+    console.log('Disconnected from server');
+    // Thử kết nối lại
+    setTimeout(() => {
+        socket.connect();
+    }, 1000);
+});
+
+socket.on('connect', () => {
+    console.log('Connected to server');
+    // Nếu đang trong phòng, join lại
+    if (currentRoom) {
+        joinRoom(currentRoom.roomId);
+    }
+});
+
+socket.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+    // Hiển thị thông báo cho user
+    showError('Mất kết nối tới server, đang thử kết nối lại...');
+});
+
+// UI event handlers
+document.getElementById('createRoom').addEventListener('click', () => {
+    const roomId = Math.random().toString(36).substr(2, 9);
+    joinRoom(roomId);
+});
+
+document.getElementById('joinRoom').addEventListener('click', () => {
+    const roomId = document.getElementById('roomId').value;
+    joinRoom(roomId);
+});
+
+document.getElementById('placeBet').addEventListener('click', () => {
+    const betAmount = parseFloat(document.getElementById('betAmount').value);
+    socket.emit('placeBet', {
+        roomId: currentRoom.roomId,
+        userId: getUserId(),
+        bet: betAmount
+    });
+});
+
+document.getElementById('hitBtn').addEventListener('click', () => {
+    socket.emit('hit', {
+        roomId: currentRoom.roomId,
+        userId: getUserId()
+    });
+});
+
+document.getElementById('standBtn').addEventListener('click', () => {
+    socket.emit('stand', {
+        roomId: currentRoom.roomId,
+        userId: getUserId()
+    });
+});
+
+// Helper functions
+function joinRoom(roomId) {
+    socket.emit('joinRoom', {
+        roomId,
+        userId: getUserId(),
+        username: getUsername()
+    });
+}
+
+function updateUI() {
+    // Update dealer cards
+    const dealerSection = document.querySelector('.dealer-cards');
+    dealerSection.innerHTML = '';
+    currentRoom.dealerCards.forEach(card => {
+        dealerSection.appendChild(createCardElement(card));
+    });
+    
+    // Update players
+    const playersSection = document.querySelector('.players-section');
+    playersSection.innerHTML = '';
+    currentRoom.players.forEach(player => {
+        const playerDiv = document.createElement('div');
+        playerDiv.className = 'player';
+        playerDiv.innerHTML = `
+            <h4>${player.username}</h4>
+            <div class="bet">Bet: $${player.bet}</div>
+            <div class="cards"></div>
+        `;
+        
+        const cardsDiv = playerDiv.querySelector('.cards');
+        player.cards.forEach(card => {
+            cardsDiv.appendChild(createCardElement(card));
+        });
+        
+        playersSection.appendChild(playerDiv);
+    });
+    
+    // Update controls
+    const isMyTurn = currentRoom.currentTurn === getMyPlayerIndex();
+    document.getElementById('hitBtn').disabled = !isMyTurn;
+    document.getElementById('standBtn').disabled = !isMyTurn;
+    document.getElementById('placeBet').disabled = currentRoom.status !== 'waiting';
+}
+
+function getMyPlayerIndex() {
+    return currentRoom.players.findIndex(p => p.userId === getUserId());
+}
+
+function getUserId() {
+    return localStorage.getItem('userId');
+}
+
+function getUsername() {
+    return localStorage.getItem('username');
+}
