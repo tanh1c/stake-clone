@@ -37,6 +37,7 @@
                     <li><i class="fas fa-rocket"></i> Roulette</li>
                     <li><i class="fas fa-sort-amount-down"></i> Plinko</li>
                     <li><i class="fas fa-cards"></i> Blackjack</li>
+                    <li><i class="fas fa-users"></i> Blackjack Multiplayer</li>
                     <li><i class="fa-solid fa-cards-blank"></i> HiLo</li>
                     <li><i class="fa-solid fa-dice-two"></i> Double Dice</li>
                     <li><i class="fa-solid fa-money-bill-trend-up"></i> Limbo</li>
@@ -295,13 +296,13 @@
                 <h2>Roulette</h2>
                 <div class="roulette-game">
                     <div class="roulette-controls">
-                        <div class="bet-amount-container">
-                            <div class="bet-amount-label">Bet Amount</div>
-                            <input type="number" id="rouletteBetAmount" class="bet-amount-input" value="10">
-                            <div class="bet-amount-buttons">
-                                <button class="bet-amount-btn" onclick="halfRouletteBet()">1/2</button>
-                                <button class="bet-amount-btn" onclick="doubleRouletteBet()">2x</button>
-                                <button class="bet-amount-btn max" onclick="maxRouletteBet()">Max</button>
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="rouletteBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfRouletteBet">½</button>
+                                <button id="doubleRouletteBet">2×</button>
+                                <button id="maxRouletteBet">Max</button>
                             </div>
                         </div>
                         <div class="current-bets" id="currentBets"></div>
@@ -337,13 +338,13 @@
                 <h2>Plinko</h2>
                 <div class="plinko-game">
                     <div class="plinko-controls">
-                        <div class="bet-amount-container">
-                            <div class="bet-amount-label">Bet Amount</div>
-                            <input type="number" id="plinkoBetAmount" class="bet-amount-input" value="10">
-                            <div class="bet-amount-buttons">
-                                <button class="bet-amount-btn" onclick="halfPlinkoBet()">1/2</button>
-                                <button class="bet-amount-btn" onclick="doublePlinkoBet()">2x</button>
-                                <button class="bet-amount-btn max" onclick="maxPlinkoBet()">Max</button>
+                        <div class="bet-amount">
+                            <label>Bet Amount</label>
+                            <input type="number" id="plinkoBetAmount" value="10">
+                            <div class="bet-buttons">
+                                <button id="halfPlinkoBet">½</button>
+                                <button id="doublePlinkoBet">2×</button>
+                                <button id="maxPlinkoBet">Max</button>
                             </div>
                         </div>
                         <div class="risk-selector">

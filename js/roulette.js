@@ -235,17 +235,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
-
-function halfRouletteBet() {
-    const input = document.getElementById('rouletteBetAmount');
-    input.value = (parseFloat(input.value) / 2).toFixed(2);
-}
-
-function doubleRouletteBet() {
-    const input = document.getElementById('rouletteBetAmount');
-    input.value = (parseFloat(input.value) * 2).toFixed(2);
-}
-
-function maxRouletteBet() {
-    document.getElementById('rouletteBetAmount').value = balance.toFixed(2);
-}

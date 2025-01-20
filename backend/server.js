@@ -9,8 +9,20 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+    }
+});
+
+// Socket.IO handlers
+require('./socket/blackjackHandler')(io);
 
 // Security middleware
 app.use(helmet());
@@ -413,4 +425,4 @@ app.post('/api/game/bet', auth, validateInput.gameAction, handleValidation, asyn
 
 const PORT = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Multiplayer</title>
+    <link rel="stylesheet" href="css/blackjack-multiplayer.css">
+</head>
+<body>
+    <div class="container">
+        <div id="roomList" class="room-list">
+            <h2>Available Rooms</h2>
+            <div class="create-room">
+                <input type="number" id="minBet" placeholder="Min Bet">
+                <input type="number" id="maxBet" placeholder="Max Bet">
+                <button onclick="createRoom()">Create Room</button>
+            </div>
+            <div id="rooms"></div>
+        </div>
+
+        <div id="waitingArea" class="waiting-area" style="display: none;">
+            <h2 id="roomId"></h2>
+            <div id="playersList"></div>
+            <div class="bet-area">
+                <input type="number" id="betAmount" placeholder="Bet Amount">
+                <button onclick="placeBet(document.getElementById('betAmount').value)">Place Bet</button>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area" style="display: none;">
+            <div class="dealer-area">
+                <div class="player-info">Dealer</div>
+                <div class="cards"></div>
+                <div class="score"></div>
+            </div>
+
+            <div class="players-area">
+                <!-- Players will be added here dynamically -->
+            </div>
+
+            <div class="controls">
+                <button onclick="hit()">Hit</button>
+                <button onclick="stand()">Stand</button>
+            </div>
+
+            <div class="chat-container">
+                <div id="chatBox" class="chat-box"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type a message...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="js/blackjack-multiplayer.js"></script>
+</body>
+</html> 
