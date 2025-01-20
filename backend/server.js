@@ -5,14 +5,54 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
+const { validateInput, handleValidation } = require('./middleware/validator');
 
 const app = express();
+
+// Security middleware
+app.use(helmet());
+app.use(basicLimiter);
+app.use(mongoSanitize());
 
 app.use(cors({
     origin: '*',  // Tạm thời cho phép tất cả các origin trong quá trình dev
     credentials: true
 }));
 app.use(express.json());
+
+// Áp dụng rate limiter cho routes cụ thể
+app.use('/api/login', authLimiter);
+app.use('/api/register', authLimiter);
+app.use('/api/game', gameLimiter);
+
+// DDoS protection middleware
+app.use((req, res, next) => {
+    // Kiểm tra User-Agent
+    const userAgent = req.headers['user-agent'];
+    if (!userAgent || userAgent.length < 10) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    
+    // Kiểm tra các header bất thường
+    const suspiciousHeaders = [
+        'x-forwarded-for',
+        'forwarded',
+        'x-real-ip',
+        'x-originating-ip',
+        'cf-connecting-ip'
+    ];
+    
+    for (const header of suspiciousHeaders) {
+        if (req.headers[header] && req.headers[header].split(',').length > 3) {
+            return res.status(403).json({ error: 'Suspicious request detected' });
+        }
+    }
+    
+    next();
+});
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -47,9 +87,21 @@ const giftcodeSchema = new mongoose.Schema({
 const Giftcode = mongoose.model('Giftcode', giftcodeSchema);
 
 // Routes
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', validateInput.register, handleValidation, async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        
+        // Kiểm tra user tồn tại an toàn hơn
+        const existingUser = await User.findOne({
+            $or: [
+                { username: { $eq: username } },
+                { email: { $eq: email } }
+            ]
+        });
+        
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
         
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -70,11 +122,11 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', validateInput.login, handleValidation, async (req, res) => {
     try {
         console.log('Login attempt:', req.body);
         const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).select('+password');
         
         if (!user) {
             console.log('User not found:', username);
@@ -352,6 +404,11 @@ app.post('/api/refresh-token', async (req, res) => {
     } catch (error) {
         res.status(401).json({ error: 'Invalid token' });
     }
+});
+
+// Game routes với validation
+app.post('/api/game/bet', auth, validateInput.gameAction, handleValidation, async (req, res) => {
+    // ... code xử lý game
 });
 
 const PORT = process.env.PORT || 3000;
