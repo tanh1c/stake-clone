@@ -191,20 +191,4 @@ async function addGameHistory(gameData) {
         },
         body: JSON.stringify(gameData)
     });
-}
-
-// Bet amount control functions
-function halfBet(inputId) {
-    const input = document.getElementById(inputId);
-    input.value = (parseFloat(input.value) / 2).toFixed(2);
-}
-
-function doubleBet(inputId) {
-    const input = document.getElementById(inputId);
-    input.value = (parseFloat(input.value) * 2).toFixed(2);
-}
-
-function maxBet(inputId) {
-    const input = document.getElementById(inputId);
-    input.value = balance.toFixed(2);
 } 

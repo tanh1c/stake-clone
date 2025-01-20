@@ -411,3 +411,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
+
+function halfPlinkoBet() {
+    const input = document.getElementById('plinkoBetAmount');
+    input.value = (parseFloat(input.value) / 2).toFixed(2);
+}
+
+function doublePlinkoBet() {
+    const input = document.getElementById('plinkoBetAmount');
+    input.value = (parseFloat(input.value) * 2).toFixed(2);
+}
+
+function maxPlinkoBet() {
+    document.getElementById('plinkoBetAmount').value = balance.toFixed(2);
+}
