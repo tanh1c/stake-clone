@@ -10,14 +10,16 @@ module.exports = (io) => {
     io.use((socket, next) => {
         const token = socket.handshake.auth.token;
         if (!token) {
-            return next(new Error('Authentication error'));
+            return next(new Error('No token provided'));
         }
         
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             socket.userId = decoded.userId;
+            console.log('Socket auth success:', socket.userId);
             next();
         } catch (err) {
+            console.error('Socket auth error:', err);
             next(new Error('Invalid token'));
         }
     });
@@ -36,10 +38,23 @@ module.exports = (io) => {
             }
         });
 
+        // Xử lý lấy danh sách phòng
+        socket.on('getRoomList', async () => {
+            try {
+                const rooms = await getRoomList();
+                socket.emit('roomList', rooms);
+            } catch (error) {
+                console.error('Get room list error:', error);
+                socket.emit('error', { message: error.message });
+            }
+        });
+
         // Tạo phòng mới
         socket.on('createRoom', async (data) => {
             try {
                 const { userId, minBet, maxBet } = data;
+                console.log('Creating room:', data);
+                
                 if (!userId) {
                     socket.emit('error', { message: 'User ID is required' });
                     return;
@@ -49,6 +64,12 @@ module.exports = (io) => {
                 
                 if (!user) {
                     socket.emit('error', { message: 'User not found' });
+                    return;
+                }
+
+                // Kiểm tra giá trị bet
+                if (!minBet || !maxBet || minBet <= 0 || maxBet <= 0) {
+                    socket.emit('error', { message: 'Invalid bet amounts' });
                     return;
                 }
 
@@ -72,6 +93,7 @@ module.exports = (io) => {
                 socket.join(roomId);
                 rooms.set(roomId, { deck: createDeck() });
                 
+                console.log('Room created:', roomId);
                 socket.emit('roomCreated', { roomId });
                 io.emit('roomList', await getRoomList());
             } catch (error) {

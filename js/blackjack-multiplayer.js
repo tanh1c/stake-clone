@@ -3,7 +3,7 @@ const socket = io('https://stake-clone-backend.onrender.com', {
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     auth: {
-        token: localStorage.getItem('token')
+        token: localStorage.getItem('token').replace('Bearer ', '')
     }
 });
 let currentRoom = null;
@@ -23,11 +23,12 @@ function playSound(soundName) {
 // Xử lý các sự kiện socket
 socket.on('connect', () => {
     console.log('Connected to server');
+    socket.emit('getRoomList');
 });
 
 socket.on('connect_error', (error) => {
     console.error('Connection error:', error);
-    if (error.message === 'Invalid token') {
+    if (error.message.includes('token')) {
         window.location.href = 'menu.html';
     }
 });
@@ -197,10 +198,21 @@ function createRoom() {
         return;
     }
 
+    if (!minBet || !maxBet || minBet <= 0 || maxBet <= 0) {
+        alert('Please enter valid bet amounts');
+        return;
+    }
+
+    console.log('Creating room with:', {
+        userId,
+        minBet: Number(minBet),
+        maxBet: Number(maxBet)
+    });
+
     socket.emit('createRoom', {
         userId: userId,
-        minBet: Number(minBet) || 1,
-        maxBet: Number(maxBet) || 1000
+        minBet: Number(minBet),
+        maxBet: Number(maxBet)
     });
 }
 
