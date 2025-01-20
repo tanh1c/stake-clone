@@ -1,9 +1,18 @@
+// Kiểm tra auth ngay khi load script
+const token = localStorage.getItem('token');
+const userId = localStorage.getItem('userId');
+
+if (!token || !userId) {
+    window.location.href = 'menu.html';
+}
+
 const socket = io('https://stake-clone-backend.onrender.com', {
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     auth: {
-        token: localStorage.getItem('token').replace('Bearer ', '')
+        token: token.replace('Bearer ', ''),
+        userId: userId
     }
 });
 let currentRoom = null;
@@ -23,6 +32,7 @@ function playSound(soundName) {
 // Xử lý các sự kiện socket
 socket.on('connect', () => {
     console.log('Connected to server');
+    console.log('Current userId:', userId); // Debug log
     socket.emit('getRoomList');
 });
 

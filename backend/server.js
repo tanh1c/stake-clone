@@ -144,7 +144,7 @@ app.post('/api/login', validateInput.login, handleValidation, async (req, res) =
             token,
             balance: user.balance,
             username: user.username,
-            userId: user._id
+            userId: user._id.toString()
         });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });

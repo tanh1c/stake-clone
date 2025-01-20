@@ -9,13 +9,22 @@ module.exports = (io) => {
     // Middleware kiểm tra auth cho socket
     io.use((socket, next) => {
         const token = socket.handshake.auth.token;
+        const userId = socket.handshake.auth.userId;
+
         if (!token) {
             return next(new Error('No token provided'));
         }
         
+        if (!userId) {
+            return next(new Error('No userId provided'));
+        }
+        
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            socket.userId = decoded.userId;
+            if (decoded.userId !== userId) {
+                return next(new Error('Invalid userId'));
+            }
+            socket.userId = userId;
             console.log('Socket auth success:', socket.userId);
             next();
         } catch (err) {
