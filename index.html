@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/crash.css">
     <link rel="stylesheet" href="css/limbo.css">
     <link rel="stylesheet" href="css/slot.css">
+    <link rel="stylesheet" href="css/flappy.css">
     <script src="js/protection.js"></script>
 </head>
 <body>
@@ -41,6 +42,7 @@
                     <li><i class="fa-solid fa-dice-two"></i> Double Dice</li>
                     <li><i class="fa-solid fa-money-bill-trend-up"></i> Limbo</li>
                     <li><i class="fa-regular fa-slot-machine"></i> Slot</li>
+                    <li><i class="fa-solid fa-bird"></i> Flappy</li>
                 </ul>
             </nav>
         </div>
@@ -730,6 +732,25 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Flappy Bird Game -->
+            <div class="game flappy-game" data-game="flappy" style="display: none;">
+                <div class="flappy-controls">
+                    <div class="bet-controls">
+                        <input type="number" id="flappyBetAmount" class="bet-input" placeholder="Bet amount" step="0.01" min="0.01">
+                        <button id="startFlappy" class="bet-button">Start</button>
+                    </div>
+                </div>
+                
+                <div class="flappy-canvas-container">
+                    <canvas id="flappyCanvas"></canvas>
+                </div>
+                
+                <div class="flappy-history">
+                    <h3>History</h3>
+                    <div id="flappyHistory" class="history-list"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="tutorialModal" class="modal">
@@ -794,5 +815,6 @@
     <script src="js/double-dice.js"></script>
     <script src="js/limbo.js"></script>
     <script src="js/slot.js"></script>
+    <script src="js/flappy.js"></script>
 </body>
 </html> 

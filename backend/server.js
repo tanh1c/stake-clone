@@ -1,8 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -11,20 +9,8 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const { basicLimiter, authLimiter, gameLimiter } = require('./middleware/rateLimiter');
 const { validateInput, handleValidation } = require('./middleware/validator');
-const User = require('./models/User');
-const BlackjackMultiplayer = require('./websocket/blackjackMultiplayer');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
-// Initialize multiplayer game
-new BlackjackMultiplayer(io);
 
 // Security middleware
 app.use(helmet());
@@ -70,6 +56,24 @@ app.use((req, res, next) => {
 
 // Kết nối MongoDB
 mongoose.connect(process.env.MONGODB_URI);
+
+// User Model
+const userSchema = new mongoose.Schema({
+    username: { type: String, unique: true },
+    email: { type: String, unique: true },
+    password: String,
+    balance: { type: Number, default: 1000 },
+    isAdmin: { type: Boolean, default: false },
+    gameHistory: [{
+        game: String,
+        bet: Number,
+        result: String,
+        profit: Number,
+        timestamp: Date
+    }]
+});
+
+const User = mongoose.model('User', userSchema);
 
 // Giftcode Model
 const giftcodeSchema = new mongoose.Schema({
@@ -409,4 +413,4 @@ app.post('/api/game/bet', auth, validateInput.gameAction, handleValidation, asyn
 
 const PORT = process.env.PORT || 3000;
 const mongoUri = process.env.MONGODB_URI;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
