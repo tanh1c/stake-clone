@@ -1800,4 +1800,149 @@ input:checked + .slider:before {
     background: rgba(255, 255, 255, 0.05);
     padding: 2px 6px;
     border-radius: 3px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        z-index: 100;
+        padding: 10px;
+    }
+    
+    .logo {
+        display: none; /* Ẩn logo trên mobile */
+    }
+    
+    .sidebar nav ul {
+        display: flex;
+        justify-content: space-around;
+        overflow-x: auto;
+        padding: 5px 0;
+    }
+    
+    .sidebar nav ul li {
+        padding: 8px;
+        font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+    }
+    
+    .sidebar nav ul li i {
+        font-size: 20px;
+        display: block;
+        margin-bottom: 4px;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+        padding-bottom: 80px; /* Space for bottom nav */
+    }
+    
+    /* Game Controls */
+    .game-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .control-group {
+        width: 100%;
+    }
+    
+    .bet-controls {
+        flex-wrap: wrap;
+    }
+    
+    .bet-amount-controls button {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    /* Game History */
+    .history-list {
+        max-height: 200px;
+    }
+    
+    .history-item {
+        font-size: 12px;
+    }
+    
+    /* Stats Display */
+    .stats-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .stat-box {
+        padding: 10px;
+    }
+}
+
+/* Tablet Responsive Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar {
+        width: 180px;
+    }
+    
+    .main-content {
+        margin-left: 180px;
+    }
+    
+    .game-controls {
+        gap: 15px;
+    }
+}
+
+/* Mobile Menu Styles */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 101;
+    background: #1A242D;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mobile-menu-toggle i {
+    font-size: 24px;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+/* Touch Styles */
+@media (hover: none) {
+    .button:active,
+    .game-controls button:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    
+    .touch-active {
+        background: rgba(0,255,127,0.2) !important;
+    }
 } 

@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         'hilo': document.querySelector('[data-game="hilo"]'),
         'double-dice': document.querySelector('[data-game="double-dice"]'),
         'limbo': document.querySelector('[data-game="limbo"]'),
-        'slot': document.querySelector('[data-game="slot"]'),
-        'flappy': document.querySelector('[data-game="flappy"]')
+        'slot': document.querySelector('[data-game="slot"]')
     };
 
     // Lấy game từ URL hash hoặc localStorage
@@ -192,4 +191,47 @@ async function addGameHistory(gameData) {
         },
         body: JSON.stringify(gameData)
     });
-} 
+}
+
+// Mobile menu handling
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            sidebar.classList.remove('active');
+        }
+    });
+}
+
+// Handle orientation change
+window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 200);
+});
+
+// Touch event handling
+function handleTouchEvents() {
+    const gameControls = document.querySelectorAll('.game-controls button');
+    
+    gameControls.forEach(button => {
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            button.classList.add('touch-active');
+        });
+        
+        button.addEventListener('touchend', () => {
+            button.classList.remove('touch-active');
+        });
+    });
+}
+
+// Call after DOM loaded
+document.addEventListener('DOMContentLoaded', handleTouchEvents); 

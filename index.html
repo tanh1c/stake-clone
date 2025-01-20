@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stake Clone</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/main.css">
@@ -20,11 +20,15 @@
     <link rel="stylesheet" href="css/crash.css">
     <link rel="stylesheet" href="css/limbo.css">
     <link rel="stylesheet" href="css/slot.css">
-    <link rel="stylesheet" href="css/flappy.css">
     <script src="js/protection.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
@@ -42,7 +46,6 @@
                     <li><i class="fa-solid fa-dice-two"></i> Double Dice</li>
                     <li><i class="fa-solid fa-money-bill-trend-up"></i> Limbo</li>
                     <li><i class="fa-regular fa-slot-machine"></i> Slot</li>
-                    <li><i class="fa-solid fa-bird"></i> Flappy</li>
                 </ul>
             </nav>
         </div>
@@ -732,32 +735,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Flappy Bird Game -->
-            <div class="game-container" data-game="flappy" style="display: none;">
-                <div class="flappy-game">
-                    <div class="flappy-controls">
-                        <div class="bet-controls">
-                            <input type="number" id="flappyBetAmount" class="bet-amount" value="1.00" step="0.1" min="0.1">
-                            <button id="halfFlappyBet" class="control-btn">1/2</button>
-                            <button id="doubleFlappyBet" class="control-btn">2x</button>
-                            <button id="maxFlappyBet" class="control-btn">Max</button>
-                        </div>
-                        <button id="startFlappy" class="start-btn">Start Game</button>
-                    </div>
-                    
-                    <div class="multiplier-display" id="currentMultiplier">Multiplier: 1.00x</div>
-                    
-                    <div class="flappy-canvas-container">
-                        <canvas id="flappyCanvas"></canvas>
-                    </div>
-                    
-                    <div class="flappy-history">
-                        <h3>History</h3>
-                        <div id="flappyHistory" class="history-list"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div id="tutorialModal" class="modal">
@@ -822,6 +799,5 @@
     <script src="js/double-dice.js"></script>
     <script src="js/limbo.js"></script>
     <script src="js/slot.js"></script>
-    <script src="js/flappy.js"></script>
 </body>
 </html> 
