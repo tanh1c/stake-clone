@@ -1,7 +1,4 @@
 const jwt = require('jsonwebtoken');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const User = require('../models/user');
 
 // Middleware xác thực JWT an toàn hơn
 const auth = async (req, res, next) => {
@@ -36,42 +33,4 @@ const auth = async (req, res, next) => {
     }
 };
 
-// Rate limiting cho game actions
-const gameLimiter = rateLimit({
-    windowMs: 1000, // 1 giây
-    max: 5, // Tối đa 5 request/giây
-    message: { error: 'Too many requests' }
-});
-
-// Security middleware
-const securityMiddleware = [
-    helmet(),
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'", process.env.API_URL],
-        }
-    }),
-    helmet.dnsPrefetchControl({ allow: false }),
-    helmet.frameguard({ action: 'deny' }),
-    helmet.hidePoweredBy(),
-    helmet.hsts({
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: true
-    }),
-    helmet.ieNoOpen(),
-    helmet.noSniff(),
-    helmet.permittedCrossDomainPolicies(),
-    helmet.referrerPolicy({ policy: 'same-origin' }),
-    helmet.xssFilter()
-];
-
-module.exports = {
-    auth,
-    gameLimiter,
-    securityMiddleware
-}; 
+module.exports = { auth }; 
