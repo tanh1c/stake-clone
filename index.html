@@ -34,6 +34,7 @@
                 <ul>
                     <li class="active"><i class="fas fa-dice"></i> Dice</li>
                     <li><i class="fas fa-coins"></i> Mines</li>
+                    <li><i class="fas fa-bird"></i> Flappy</li>
                     <li><i class="fas fa-chart-line"></i> Crash</li>
                     <li><i class="fas fa-rocket"></i> Roulette</li>
                     <li><i class="fas fa-sort-amount-down"></i> Plinko</li>
@@ -42,7 +43,6 @@
                     <li><i class="fa-solid fa-dice-two"></i> Double Dice</li>
                     <li><i class="fa-solid fa-money-bill-trend-up"></i> Limbo</li>
                     <li><i class="fa-regular fa-slot-machine"></i> Slot</li>
-                    <li><i class="fa-solid fa-bird"></i> Flappy</li>
                 </ul>
             </nav>
         </div>
@@ -733,22 +733,27 @@
                 </div>
             </div>
 
-            <!-- Flappy Bird Game -->
-            <div class="game flappy-game" data-game="flappy" style="display: none;">
+            <!-- Flappy Game -->
+            <div class="game-container flappy-game" style="display: none;">
                 <div class="flappy-controls">
-                    <div class="bet-controls">
-                        <input type="number" id="flappyBetAmount" class="bet-input" placeholder="Bet amount" step="0.01" min="0.01">
-                        <button id="startFlappy" class="bet-button">Start</button>
-                    </div>
+                    <input type="number" id="betAmount" placeholder="Bet amount" step="0.01" min="0.01">
+                    <button id="startFlappyGame">Start Game</button>
                 </div>
                 
-                <div class="flappy-canvas-container">
-                    <canvas id="flappyCanvas"></canvas>
+                <div class="multiplier-display">
+                    <span id="currentMultiplier">Multiplier: 1.00x</span>
                 </div>
                 
-                <div class="flappy-history">
-                    <h3>History</h3>
-                    <div id="flappyHistory" class="history-list"></div>
+                <canvas id="flappyCanvas"></canvas>
+                
+                <div class="game-instructions">
+                    <h3>How to Play</h3>
+                    <ul>
+                        <li>Click or press Space to make the bird jump</li>
+                        <li>Avoid hitting pipes and boundaries</li>
+                        <li>Each pipe passed increases your multiplier by 20%</li>
+                        <li>Crash into anything to cash out</li>
+                    </ul>
                 </div>
             </div>
         </div>
