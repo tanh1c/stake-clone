@@ -387,4 +387,90 @@
     font-size: 14px;
     color: #888;
     margin-bottom: 10px;
+}
+
+.game-mode-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mode-tab {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-tab.active {
+    background: #00FF7F;
+    color: #0F1923;
+}
+
+.game-mode {
+    display: none;
+}
+
+.game-mode.active {
+    display: block;
+}
+
+.room-list {
+    background: rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.rooms-container {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.room-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.join-room {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.join-room input {
+    flex: 1;
+}
+
+.game-room {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.game-room.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.room-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 } 

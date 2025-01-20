@@ -576,3 +576,74 @@ function getUserId() {
 function getUsername() {
     return localStorage.getItem('username');
 }
+
+// Thêm code xử lý tab mode
+document.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Update active tab
+        document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show active mode
+        const mode = tab.dataset.mode;
+        document.querySelectorAll('.game-mode').forEach(m => m.classList.remove('active'));
+        document.querySelector(`.game-mode.${mode}`).classList.add('active');
+        
+        // Reset game state if needed
+        if (mode === 'single') {
+            BlackjackGame.init();
+        } else {
+            loadRooms();
+        }
+    });
+});
+
+// Load available rooms
+async function loadRooms() {
+    try {
+        const response = await fetch(`${API_URL}/blackjack/rooms`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const rooms = await response.json();
+        updateRoomsList(rooms);
+    } catch (error) {
+        console.error('Error loading rooms:', error);
+    }
+}
+
+function updateRoomsList(rooms) {
+    const container = document.querySelector('.rooms-container');
+    container.innerHTML = '';
+    
+    rooms.forEach(room => {
+        const roomElement = document.createElement('div');
+        roomElement.className = 'room-item';
+        roomElement.innerHTML = `
+            <div class="room-info">
+                <span>Room: ${room.roomId}</span>
+                <span>Players: ${room.players.length}/7</span>
+            </div>
+            <button onclick="joinRoom('${room.roomId}')" 
+                    ${room.players.length >= 7 ? 'disabled' : ''}>
+                Join
+            </button>
+        `;
+        container.appendChild(roomElement);
+    });
+}
+
+// Thêm route mới vào backend/server.js
+app.get('/api/blackjack/rooms', auth, async (req, res) => {
+    try {
+        const rooms = await BlackjackRoom.find({
+            status: 'waiting',
+            'players.7': { $exists: false } // Rooms with less than 7 players
+        });
+        res.json(rooms);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
