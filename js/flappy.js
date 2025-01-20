@@ -7,7 +7,7 @@ const FlappyGame = {
         velocity: 0,
         gravity: 0.5,
         jump: -8,
-        size: 20
+        size: 18
     },
     pipes: [],
     gameLoop: null,
@@ -93,6 +93,9 @@ const FlappyGame = {
         // Update UI
         document.getElementById('currentMultiplier').textContent = 'Multiplier: 1.00x';
         document.getElementById('startFlappy').disabled = true;
+        
+        // Reset button state
+        document.getElementById('startFlappy').disabled = false;
     },
     
     addPipe() {
@@ -141,7 +144,8 @@ const FlappyGame = {
                 if (!pipe.passed && this.bird.x > pipe.x + pipe.width) {
                     pipe.passed = true;
                     this.pipesPassed++;
-                    this.currentMultiplier += 0.5;
+                    // Tăng multiplier theo cấp số nhân
+                    this.currentMultiplier = 1 + (this.pipesPassed * 0.5);
                     document.getElementById('currentMultiplier').textContent = 
                         `Multiplier: ${this.currentMultiplier.toFixed(2)}x`;
                 }
@@ -185,7 +189,6 @@ const FlappyGame = {
     
     async gameOver() {
         this.isPlaying = false;
-        document.getElementById('startFlappy').disabled = false;
         
         const winAmount = this.currentBet * this.currentMultiplier;
         
@@ -206,9 +209,14 @@ const FlappyGame = {
                 balance = data.balance;
                 document.querySelector('.balance').textContent = `Balance: $${balance.toFixed(2)}`;
                 this.addToHistory(this.currentMultiplier, winAmount > this.currentBet);
+                
+                // Enable start button after game over
+                document.getElementById('startFlappy').disabled = false;
             }
         } catch (error) {
             console.error('Error updating balance:', error);
+            // Still enable start button even if there's an error
+            document.getElementById('startFlappy').disabled = false;
         }
     },
     
