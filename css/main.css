@@ -3,9 +3,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    background: rgba(26, 44, 56, 0.8);
+    background: rgba(26, 44, 56, 0.95);
     border-radius: 10px;
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
 .header-left {

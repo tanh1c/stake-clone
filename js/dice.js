@@ -59,29 +59,14 @@ function calculateMultiplier(winChance) {
 
 function addToHistory(result, won) {
     const historyList = document.getElementById('diceHistory');
+    if (!historyList) return;
+    
+    const betAmount = document.getElementById('diceBetAmount');
+    if (!betAmount || !betAmount.value) return;
+    
     const historyItem = document.createElement('div');
     historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
-    
-    const betAmount = parseFloat(document.getElementById('betAmount').value);
-    const winChance = parseFloat(document.getElementById('winChance').value);
-    const multiplier = calculateMultiplier(winChance);
-    
-    // Tính số tiền thắng/thua
-    const amount = won ? (betAmount * parseFloat(multiplier) - betAmount) : betAmount;
-    
-    historyItem.innerHTML = `
-        <div class="history-details">
-            <span class="history-result">${result.toFixed(2)}</span>
-            <span class="history-amount ${won ? 'win' : 'lose'}">
-                ${won ? '+' : '-'}$${amount.toFixed(2)}
-            </span>
-        </div>
-        <div class="history-info">
-            <span>Bet: $${betAmount.toFixed(2)}</span>
-            <span>Chance: ${winChance}%</span>
-            <span>Multi: ${multiplier}x</span>
-        </div>
-    `;
+    historyItem.textContent = result.toFixed(2);
     
     // Thêm vào đầu danh sách
     if (historyList.firstChild) {
@@ -90,16 +75,16 @@ function addToHistory(result, won) {
         historyList.appendChild(historyItem);
     }
     
-    // Giới hạn số lượng lịch sử
+    // Giới hạn số lượng item trong history
     while (historyList.children.length > 10) {
         historyList.removeChild(historyList.lastChild);
     }
     
-    // Animation cho item mới
-    requestAnimationFrame(() => {
+    // Animation cho history item
+    setTimeout(() => {
         historyItem.style.opacity = '1';
         historyItem.style.transform = 'translateY(0)';
-    });
+    }, 50);
 }
 
 function animateRoll(duration, finalNumber) {
@@ -184,11 +169,17 @@ function updateStats(won, betAmount, profitLoss) {
 }
 
 async function rollDice() {
-    const betAmount = parseFloat(document.getElementById('betAmount').value);
+    const betAmount = document.getElementById('diceBetAmount');
+    if (!betAmount || !betAmount.value) {
+        console.error('Bet amount input not found or empty');
+        return;
+    }
+    
+    const amount = parseInt(betAmount.value);
     const winChance = parseFloat(document.getElementById('winChance').value);
     
     // Validation
-    if (betAmount > balance) {
+    if (amount > balance) {
         alert('Không đủ số dư!');
         stopAutoBet();
         return;
@@ -211,20 +202,20 @@ async function rollDice() {
     setTimeout(async () => {
         if (won) {
             const multiplier = parseFloat(calculateMultiplier(winChance));
-            const winAmount = betAmount * multiplier;
-            const profit = winAmount - betAmount;
+            const winAmount = amount * multiplier;
+            const profit = winAmount - amount;
             const updated = await updateBalance(profit);
             if (!updated) return;
-            updateStats(true, betAmount, profit);
+            updateStats(true, amount, profit);
             
             // Xử lý auto bet khi thắng
             if (isAutoBetting) {
                 handleAutoBetResult(true);
             }
         } else {
-            const updated = await updateBalance(-betAmount);
+            const updated = await updateBalance(-amount);
             if (!updated) return;
-            updateStats(false, betAmount, -betAmount);
+            updateStats(false, amount, -amount);
             
             // Xử lý auto bet khi thua
             if (isAutoBetting) {

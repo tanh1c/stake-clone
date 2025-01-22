@@ -14,6 +14,47 @@
     backdrop-filter: blur(10px);
 }
 
+.slot-controls .bet-amount {
+    margin-bottom: 15px;
+}
+
+.slot-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.slot-controls input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.slot-controls .bet-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.slot-controls .bet-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slot-controls .bet-buttons button:hover {
+    background: #3A4754;
+    transform: translateY(-2px);
+}
+
 .slot-container {
     background: linear-gradient(180deg, #1E2A35 0%, #141C24 100%);
     border-radius: 8px;

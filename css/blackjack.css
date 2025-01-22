@@ -1,8 +1,16 @@
 .blackjack-game {
+    display: flex;
+    gap: 20px;
     background: linear-gradient(180deg, #1A242D, #141C24);
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Controls bên trái */
+.blackjack-left-panel {
+    width: 300px;
+    flex-shrink: 0;
 }
 
 .blackjack-controls {
@@ -12,6 +20,54 @@
     margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
+}
+
+.blackjack-controls .bet-amount {
+    margin-bottom: 15px;
+}
+
+.blackjack-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.blackjack-controls input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.blackjack-controls .bet-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.blackjack-controls .bet-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.blackjack-controls .bet-buttons button:hover {
+    background: #3A4754;
+    transform: translateY(-2px);
+}
+
+/* Game container bên phải */
+.blackjack-game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .blackjack-table {

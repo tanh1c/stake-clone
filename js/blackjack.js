@@ -444,3 +444,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
+
+// Cập nhật hàm placeBet
+async function placeBlackjackBet() {
+    const betAmount = document.getElementById('blackjackBetAmount');
+    if (!betAmount || !betAmount.value) {
+        console.error('Bet amount input not found or empty');
+        return;
+    }
+    
+    const amount = parseInt(betAmount.value);
+
+    // Validation
+    if (amount > balance) {
+        alert('Không đủ số dư!');
+        return;
+    }
+
+    if (amount < 1 || amount > 100000) {
+        alert('Số tiền cược phải từ 1 đến 100000!');
+        return;
+    }
+
+    // Cập nhật số dư
+    const updated = await updateBalance(-amount);
+    if (!updated) return;
+
+    // Rest of the function...
+}
+
+// Cập nhật hàm addToHistory
+function addToBlackjackHistory(result, won) {
+    const historyList = document.getElementById('blackjackHistory');
+    if (!historyList) return;
+    
+    const betAmount = document.getElementById('blackjackBetAmount');
+    if (!betAmount || !betAmount.value) return;
+    
+    const historyItem = document.createElement('div');
+    historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
+    historyItem.textContent = result;
+    
+    // Thêm vào đầu danh sách
+    if (historyList.firstChild) {
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    } else {
+        historyList.appendChild(historyItem);
+    }
+    
+    // Giới hạn số lượng item trong history
+    while (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Animation cho history item
+    setTimeout(() => {
+        historyItem.style.opacity = '1';
+        historyItem.style.transform = 'translateY(0)';
+    }, 50);
+}

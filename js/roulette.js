@@ -235,3 +235,118 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
+
+// Thêm hàm hiển thị cược
+function displayBet(type, amount) {
+    const betsContainer = document.getElementById('currentBets');
+    const betItem = document.createElement('div');
+    betItem.className = `bet-item ${getBetClass(type)}`;
+    
+    betItem.innerHTML = `
+        <span class="bet-type">${type}</span>
+        <span class="bet-amount">$${amount}</span>
+    `;
+    
+    betsContainer.appendChild(betItem);
+}
+
+// Hàm xác định class cho bet item
+function getBetClass(type) {
+    if (redNumbers.includes(Number(type))) return 'red';
+    if (blackNumbers.includes(Number(type))) return 'black';
+    return 'other';
+}
+
+// Cập nhật hàm clearBets
+function clearRouletteBets() {
+    currentBets = {};
+    document.getElementById('currentBets').innerHTML = '';
+    // ... existing clear logic
+}
+
+// Cập nhật hàm placeBet
+async function placeRouletteBet(type) {
+    const betAmount = document.getElementById('rouletteBetAmount');
+    if (!betAmount || !betAmount.value) {
+        console.error('Bet amount input not found or empty');
+        return;
+    }
+    
+    const amount = parseInt(betAmount.value);
+
+    // Validation
+    if (amount > balance) {
+        alert('Không đủ số dư!');
+        return;
+    }
+
+    if (amount < 1 || amount > 100000) {
+        alert('Số tiền cược phải từ 1 đến 100000!');
+        return;
+    }
+
+    // Thêm cược vào danh sách
+    currentBets[type] = (currentBets[type] || 0) + amount;
+    displayBet(type, amount);
+
+    // Cập nhật số dư
+    const updated = await updateBalance(-amount);
+    if (!updated) return;
+
+    // Hiển thị cược trên bàn chơi
+    updateBetDisplay(type, currentBets[type]);
+}
+
+// Cập nhật hàm addToHistory 
+function addToRouletteHistory(result, won) {
+    const historyList = document.getElementById('rouletteHistory');
+    if (!historyList) return;
+    
+    const betAmount = document.getElementById('rouletteBetAmount');
+    if (!betAmount || !betAmount.value) return;
+    
+    const historyItem = document.createElement('div');
+    historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
+    
+    // Xác định màu của số
+    let color = 'black';
+    if (result === 0) {
+        color = 'green';
+    } else if ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(result)) {
+        color = 'red';
+    }
+    
+    historyItem.innerHTML = `<span class="number ${color}">${result}</span>`;
+    
+    // Thêm vào đầu danh sách
+    if (historyList.firstChild) {
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    } else {
+        historyList.appendChild(historyItem);
+    }
+    
+    // Giới hạn số lượng item trong history
+    while (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Animation cho history item
+    setTimeout(() => {
+        historyItem.style.opacity = '1';
+        historyItem.style.transform = 'translateY(0)';
+    }, 50);
+}
+
+// Cập nhật HTML cho input bet amount
+document.getElementById('rouletteBetAmount').addEventListener('input', function() {
+    // Chỉ cho phép số
+    this.value = this.value.replace(/[^0-9]/g, '');
+    
+    // Giới hạn giá trị
+    let value = parseInt(this.value);
+    if (isNaN(value) || value < 1) {
+        this.value = 1;
+    } else if (value > 100000) {
+        this.value = 100000;
+    }
+});

@@ -1,8 +1,12 @@
 .double-dice-game {
-    background: linear-gradient(180deg, #1A242D, #141C24);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    gap: 20px;
+}
+
+/* Controls bên trái */
+.double-dice-left-panel {
+    width: 300px;
+    flex-shrink: 0;
 }
 
 .double-dice-controls {
@@ -12,6 +16,91 @@
     margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
+}
+
+.double-dice-controls .bet-amount {
+    margin-bottom: 15px;
+}
+
+.double-dice-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.double-dice-controls input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.double-dice-controls .bet-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.double-dice-controls .bet-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.double-dice-controls .bet-buttons button:hover {
+    background: #3A4754;
+    transform: translateY(-2px);
+}
+
+/* Roll Button Style */
+.double-dice-buttons {
+    margin-top: 20px;
+}
+
+.double-dice-buttons .roll-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,255,127,0.2);
+}
+
+.double-dice-buttons .roll-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,255,127,0.3);
+}
+
+.double-dice-buttons .button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.double-dice-buttons .button-text i {
+    font-size: 14px;
+}
+
+/* Game container bên phải */
+.double-dice-game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .double-dice-table {
@@ -38,7 +127,12 @@
     height: 100px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 1s;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.dice:hover {
+    transform: scale(1.1) rotateX(10deg) rotateY(10deg);
 }
 
 .dice-face {
@@ -54,6 +148,8 @@
     font-size: 40px;
     font-weight: bold;
     backface-visibility: hidden;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
 }
 
 .dice-face.front  { color: black; transform: translateZ(50px); }
@@ -113,50 +209,6 @@
 .multiplier {
     font-size: 14px;
     color: #00FF7F;
-}
-
-.double-dice-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
-}
-
-.double-dice-buttons button {
-    min-width: 150px;
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
-    color: #000;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.double-dice-buttons button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,255,127,0.3);
-}
-
-.double-dice-buttons button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Dice rolling animation */
-@keyframes roll {
-    0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-    100% { transform: rotateX(720deg) rotateY(720deg) rotateZ(720deg); }
-}
-
-.dice.rolling {
-    animation: roll 1s ease-out;
 }
 
 /* Result message */
@@ -255,4 +307,24 @@
 .double-dice-history::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.2);
     border-radius: 3px;
+}
+
+/* Thêm animation xoay xúc xắc */
+@keyframes roll {
+    0% { 
+        transform: rotateX(0) rotateY(0) rotateZ(0); 
+    }
+    100% { 
+        transform: rotateX(720deg) rotateY(720deg) rotateZ(720deg); 
+    }
+}
+
+.dice.rolling {
+    animation: roll 1s ease-out;
+}
+
+/* Thêm hiệu ứng glow khi xoay */
+.dice.rolling .dice-face {
+    box-shadow: 0 0 10px rgba(0,255,127,0.5),
+                inset 0 0 15px rgba(0,255,127,0.3);
 } 

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script src="js/protection.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stake Clone</title>
@@ -21,6 +20,8 @@
     <link rel="stylesheet" href="css/crash.css">
     <link rel="stylesheet" href="css/limbo.css">
     <link rel="stylesheet" href="css/slot.css">
+    <link rel="stylesheet" href="css/roulette.css">
+    <script src="js/main.js"></script>
 </head>
 <body>
     <div class="container">
@@ -80,7 +81,13 @@
                     <div class="betting-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="betAmount" value="10">
+                            <input type="number" 
+                                id="diceBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                         </div>
                         <div class="win-chance">
                             <label>Win Chance</label>
@@ -210,7 +217,13 @@
                     <div class="mines-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="minesBetAmount" value="10">
+                            <input type="number" 
+                                id="minesBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                         </div>
                         <div class="mines-count">
                             <label>Mines Count</label>
@@ -248,7 +261,13 @@
                     <div class="crash-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="crashBetAmount" value="10">
+                            <input type="number" 
+                                id="crashBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                             <div class="bet-buttons">
                                 <button id="halfCrashBet">½</button>
                                 <button id="doubleCrashBet">2×</button>
@@ -299,40 +318,60 @@
             <div class="game-container" id="rouletteGame" data-game="roulette" style="display: none;">
                 <h2>Roulette</h2>
                 <div class="roulette-game">
-                    <div class="roulette-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="rouletteBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfRouletteBet">½</button>
-                                <button id="doubleRouletteBet">2×</button>
-                                <button id="maxRouletteBet">Max</button>
+                    <!-- Panel bên trái -->
+                    <div class="roulette-left-panel">
+                        <!-- Controls -->
+                        <div class="roulette-controls">
+                            <div class="bet-amount">
+                                <label>Bet Amount</label>
+                                <input type="number" 
+                                    id="rouletteBetAmount" 
+                                    value="10" 
+                                    min="1" 
+                                    max="100000" 
+                                    step="1"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
+                                <div class="bet-buttons">
+                                    <button id="halfRouletteBet">½</button>
+                                    <button id="doubleRouletteBet">2×</button>
+                                    <button id="maxRouletteBet">Max</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="current-bets" id="currentBets"></div>
-                    </div>
-                    
-                    <div class="roulette-result" id="rouletteResult">
-                        <div class="result-display">
-                            <span class="result-number">?</span>
+                        
+                        <!-- Your Bets -->
+                        <div class="current-bets-display">
+                            <h3>Your Bets</h3>
+                            <div id="currentBets" class="bets-list">
+                                <!-- Bets will be displayed here -->
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="betting-board" id="bettingBoard"></div>
-                    
-                    <div class="roulette-buttons">
-                        <button id="spinRoulette" class="roulette-button spin-button" onclick="spinRoulette()">
-                            <span class="button-text">
-                                Spin
-                                <i class="fas fa-sync-alt"></i>
-                            </span>
-                        </button>
-                        <button id="clearBets" class="roulette-button clear-button" onclick="clearRouletteBets()">
-                            <span class="button-text">
-                                Clear Bets
-                                <i class="fas fa-trash"></i>
-                            </span>
-                        </button>
+
+                    <!-- Game container bên phải -->
+                    <div class="roulette-game-container">
+                        <div class="roulette-result" id="rouletteResult">
+                            <div class="result-display">
+                                <span class="result-number">?</span>
+                            </div>
+                        </div>
+                        
+                        <div class="betting-board" id="bettingBoard"></div>
+                        
+                        <div class="roulette-buttons">
+                            <button id="spinRoulette" class="roulette-button spin-button" onclick="spinRoulette()">
+                                <span class="button-text">
+                                    Spin
+                                    <i class="fas fa-sync-alt"></i>
+                                </span>
+                            </button>
+                            <button id="clearBets" class="roulette-button clear-button" onclick="clearRouletteBets()">
+                                <span class="button-text">
+                                    Clear Bets
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -344,7 +383,13 @@
                     <div class="plinko-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="plinkoBetAmount" value="10">
+                            <input type="number" 
+                                id="plinkoBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                             <div class="bet-buttons">
                                 <button id="halfPlinkoBet">½</button>
                                 <button id="doublePlinkoBet">2×</button>
@@ -363,32 +408,31 @@
                             <label>Rows</label>
                             <select id="plinkoRows">
                                 <option value="8">8</option>
-                                <option value="12" selected>12</option> 
+                                <option value="12" selected>12</option>
                                 <option value="16">16</option>
                             </select>
                         </div>
+                        <div class="plinko-buttons">
+                            <button id="dropBall">
+                                <span class="button-text">
+                                    Drop Ball
+                                    <i class="fas fa-circle"></i>
+                                </span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="plinko-board">
-                        <canvas id="plinkoCanvas"></canvas>
-                    </div>
-
-                    <div class="multiplier-slots">
-                        <!-- Multiplier slots will be generated by JS -->
-                    </div>
-                    
-                    <div class="plinko-buttons">
-                        <button id="dropBall">
-                            <span class="button-text">
-                                Drop Ball
-                                <i class="fas fa-circle"></i>
-                            </span>
-                        </button>
-                    </div>
-
-                    <div class="plinko-history">
-                        <h3>History</h3>
-                        <div class="history-list" id="plinkoHistory"></div>
+                    <div class="plinko-game-container">
+                        <div class="plinko-board">
+                            <canvas id="plinkoCanvas"></canvas>
+                        </div>
+                        <div class="multiplier-slots">
+                            <!-- Multiplier slots will be generated by JS -->
+                        </div>
+                        <div class="plinko-history">
+                            <h3>History</h3>
+                            <div class="history-list" id="plinkoHistory"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -397,40 +441,53 @@
             <div class="game-container" id="blackjackGame" data-game="blackjack" style="display: none;">
                 <h2>Blackjack</h2>
                 <div class="blackjack-game">
-                    <div class="blackjack-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="blackjackBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfBlackjackBet">½</button>
-                                <button id="doubleBlackjackBet">2×</button>
-                                <button id="maxBlackjackBet">Max</button>
+                    <!-- Panel bên trái -->
+                    <div class="blackjack-left-panel">
+                        <!-- Controls -->
+                        <div class="blackjack-controls">
+                            <div class="bet-amount">
+                                <label>Bet Amount</label>
+                                <input type="number" 
+                                    id="blackjackBetAmount" 
+                                    value="10" 
+                                    min="1" 
+                                    max="100000" 
+                                    step="1"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
+                                <div class="bet-buttons">
+                                    <button id="halfBlackjackBet">½</button>
+                                    <button id="doubleBlackjackBet">2×</button>
+                                    <button id="maxBlackjackBet">Max</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="blackjack-table">
-                        <div class="dealer-hand">
-                            <h3>Dealer's Hand <span class="hand-value" id="dealerValue">0</span></h3>
-                            <div class="cards" id="dealerCards"></div>
-                        </div>
-                        
-                        <div class="player-hand">
-                            <h3>Your Hand <span class="hand-value" id="playerValue">0</span></h3>
-                            <div class="cards" id="playerCards"></div>
+                    <!-- Game container bên phải -->
+                    <div class="blackjack-game-container">
+                        <div class="blackjack-table">
+                            <div class="dealer-hand">
+                                <h3>Dealer's Hand <span class="hand-value" id="dealerValue">0</span></h3>
+                                <div class="cards" id="dealerCards"></div>
+                            </div>
+                            
+                            <div class="player-hand">
+                                <h3>Your Hand <span class="hand-value" id="playerValue">0</span></h3>
+                                <div class="cards" id="playerCards"></div>
+                            </div>
+
+                            <div class="blackjack-buttons">
+                                <button id="dealButton">Deal</button>
+                                <button id="hitButton" disabled>Hit</button>
+                                <button id="standButton" disabled>Stand</button>
+                                <button id="doubleButton" disabled>Double</button>
+                            </div>
                         </div>
 
-                        <div class="blackjack-buttons">
-                            <button id="dealButton">Deal</button>
-                            <button id="hitButton" disabled>Hit</button>
-                            <button id="standButton" disabled>Stand</button>
-                            <button id="doubleButton" disabled>Double</button>
+                        <div class="blackjack-history">
+                            <h3>History</h3>
+                            <div class="history-list" id="blackjackHistory"></div>
                         </div>
-                    </div>
-
-                    <div class="blackjack-history">
-                        <h3>History</h3>
-                        <div class="history-list" id="blackjackHistory"></div>
                     </div>
                 </div>
             </div>
@@ -442,7 +499,13 @@
                     <div class="hilo-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="hiloBetAmount" value="10">
+                            <input type="number" 
+                                id="hiloBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                             <div class="bet-buttons">
                                 <button id="halfHiloBet">½</button>
                                 <button id="doubleHiloBet">2×</button>
@@ -520,120 +583,133 @@
             <div class="game-container" id="doubleDiceGame" data-game="double-dice" style="display: none;">
                 <h2>Double Dice</h2>
                 <div class="double-dice-game">
-                    <div class="double-dice-controls">
-                        <div class="bet-amount">
-                            <label>Bet Amount</label>
-                            <input type="number" id="doubleDiceBetAmount" value="10">
-                            <div class="bet-buttons">
-                                <button id="halfDoubleDiceBet">½</button>
-                                <button id="doubleDoubleDiceBet">2×</button>
-                                <button id="maxDoubleDiceBet">Max</button>
+                    <!-- Panel bên trái -->
+                    <div class="double-dice-left-panel">
+                        <!-- Controls -->
+                        <div class="double-dice-controls">
+                            <div class="bet-amount">
+                                <label>Bet Amount</label>
+                                <input type="number" 
+                                    id="doubleDiceBetAmount" 
+                                    value="10" 
+                                    min="1" 
+                                    max="100000" 
+                                    step="1"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
+                                <div class="bet-buttons">
+                                    <button id="halfDoubleDiceBet">½</button>
+                                    <button id="doubleDoubleDiceBet">2×</button>
+                                    <button id="maxDoubleDiceBet">Max</button>
+                                </div>
                             </div>
+                        </div>
+                        
+                        <!-- Roll Button -->
+                        <div class="double-dice-buttons">
+                            <button id="rollDice" class="roll-button">
+                                <span class="button-text">
+                                    Roll Dice
+                                    <i class="fas fa-dice"></i>
+                                </span>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="double-dice-table">
-                        <div class="dice-container">
-                            <div class="dice" id="dice1">
-                                <div class="dice-face front">1</div>
-                                <div class="dice-face back">6</div>
-                                <div class="dice-face top">2</div>
-                                <div class="dice-face bottom">5</div>
-                                <div class="dice-face right">3</div>
-                                <div class="dice-face left">4</div>
+                    <!-- Game container bên phải -->
+                    <div class="double-dice-game-container">
+                        <div class="double-dice-table">
+                            <div class="dice-container">
+                                <div class="dice" id="dice1">
+                                    <div class="dice-face front">1</div>
+                                    <div class="dice-face back">6</div>
+                                    <div class="dice-face top">2</div>
+                                    <div class="dice-face bottom">5</div>
+                                    <div class="dice-face right">3</div>
+                                    <div class="dice-face left">4</div>
+                                </div>
+                                <div class="dice" id="dice2">
+                                    <div class="dice-face front">1</div>
+                                    <div class="dice-face back">6</div>
+                                    <div class="dice-face top">2</div>
+                                    <div class="dice-face bottom">5</div>
+                                    <div class="dice-face right">3</div>
+                                    <div class="dice-face left">4</div>
+                                </div>
                             </div>
-                            <div class="dice" id="dice2">
-                                <div class="dice-face front">1</div>
-                                <div class="dice-face back">6</div>
-                                <div class="dice-face top">2</div>
-                                <div class="dice-face bottom">5</div>
-                                <div class="dice-face right">3</div>
-                                <div class="dice-face left">4</div>
+
+                            <div class="betting-options">
+                                <div class="bet-row">
+                                    <button class="bet-option" data-type="under7">
+                                        <span class="option-name">Under 7</span>
+                                        <span class="multiplier">2.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="over7">
+                                        <span class="option-name">Over 7</span>
+                                        <span class="multiplier">2.00x</span>
+                                    </button>
+                                </div>
+                                <div class="bet-row">
+                                    <button class="bet-option" data-type="even">
+                                        <span class="option-name">Even</span>
+                                        <span class="multiplier">2.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="odd">
+                                        <span class="option-name">Odd</span>
+                                        <span class="multiplier">2.00x</span>
+                                    </button>
+                                </div>
+                                <div class="bet-row numbers">
+                                    <button class="bet-option" data-type="2">
+                                        <span class="option-name">2</span>
+                                        <span class="multiplier">30.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="3">
+                                        <span class="option-name">3</span>
+                                        <span class="multiplier">15.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="4">
+                                        <span class="option-name">4</span>
+                                        <span class="multiplier">10.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="5">
+                                        <span class="option-name">5</span>
+                                        <span class="multiplier">8.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="6">
+                                        <span class="option-name">6</span>
+                                        <span class="multiplier">6.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="7">
+                                        <span class="option-name">7</span>
+                                        <span class="multiplier">5.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="8">
+                                        <span class="option-name">8</span>
+                                        <span class="multiplier">6.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="9">
+                                        <span class="option-name">9</span>
+                                        <span class="multiplier">8.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="10">
+                                        <span class="option-name">10</span>
+                                        <span class="multiplier">10.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="11">
+                                        <span class="option-name">11</span>
+                                        <span class="multiplier">15.00x</span>
+                                    </button>
+                                    <button class="bet-option" data-type="12">
+                                        <span class="option-name">12</span>
+                                        <span class="multiplier">30.00x</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="betting-options">
-                            <div class="bet-row">
-                                <button class="bet-option" data-type="under7">
-                                    <span class="option-name">Under 7</span>
-                                    <span class="multiplier">2.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="over7">
-                                    <span class="option-name">Over 7</span>
-                                    <span class="multiplier">2.00x</span>
-                                </button>
-                            </div>
-                            <div class="bet-row">
-                                <button class="bet-option" data-type="even">
-                                    <span class="option-name">Even</span>
-                                    <span class="multiplier">2.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="odd">
-                                    <span class="option-name">Odd</span>
-                                    <span class="multiplier">2.00x</span>
-                                </button>
-                            </div>
-                            <div class="bet-row numbers">
-                                <button class="bet-option" data-type="2">
-                                    <span class="option-name">2</span>
-                                    <span class="multiplier">30.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="3">
-                                    <span class="option-name">3</span>
-                                    <span class="multiplier">15.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="4">
-                                    <span class="option-name">4</span>
-                                    <span class="multiplier">10.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="5">
-                                    <span class="option-name">5</span>
-                                    <span class="multiplier">8.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="6">
-                                    <span class="option-name">6</span>
-                                    <span class="multiplier">6.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="7">
-                                    <span class="option-name">7</span>
-                                    <span class="multiplier">5.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="8">
-                                    <span class="option-name">8</span>
-                                    <span class="multiplier">6.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="9">
-                                    <span class="option-name">9</span>
-                                    <span class="multiplier">8.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="10">
-                                    <span class="option-name">10</span>
-                                    <span class="multiplier">10.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="11">
-                                    <span class="option-name">11</span>
-                                    <span class="multiplier">15.00x</span>
-                                </button>
-                                <button class="bet-option" data-type="12">
-                                    <span class="option-name">12</span>
-                                    <span class="multiplier">30.00x</span>
-                                </button>
-                            </div>
+                        <div class="double-dice-history">
+                            <h3>History</h3>
+                            <div class="history-list" id="doubleDiceHistory"></div>
                         </div>
-                    </div>
-
-                    <div class="double-dice-buttons">
-                        <button id="rollDice">
-                            <span class="button-text">
-                                Roll Dice
-                                <i class="fas fa-dice"></i>
-                            </span>
-                        </button>
-                    </div>
-
-                    <div class="double-dice-history">
-                        <h3>History</h3>
-                        <div class="history-list" id="doubleDiceHistory"></div>
                     </div>
                 </div>
             </div>
@@ -645,7 +721,13 @@
                     <div class="limbo-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="limboBetAmount" value="10">
+                            <input type="number" 
+                                id="limboBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                             <div class="bet-buttons">
                                 <button id="halfLimboBet">½</button>
                                 <button id="doubleLimboBet">2×</button>
@@ -687,7 +769,13 @@
                     <div class="slot-controls">
                         <div class="bet-amount">
                             <label>Bet Amount</label>
-                            <input type="number" id="slotBetAmount" value="10">
+                            <input type="number" 
+                                id="slotBetAmount" 
+                                value="10" 
+                                min="1" 
+                                max="100000" 
+                                step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value < 1) this.value = 1; if(this.value > 100000) this.value = 100000;">
                             <div class="bet-buttons">
                                 <button id="halfSlotBet">½</button>
                                 <button id="doubleSlotBet">2×</button>
@@ -787,6 +875,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/protection.js"></script>
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
     <script src="js/dice.js"></script>

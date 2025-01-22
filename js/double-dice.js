@@ -236,3 +236,83 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 });
+
+// Thêm hàm xử lý animation xoay xúc xắc
+function roll() {
+    const dice1 = document.getElementById('dice1');
+    const dice2 = document.getElementById('dice2');
+    
+    // Thêm class rolling để kích hoạt animation
+    dice1.classList.add('rolling');
+    dice2.classList.add('rolling');
+    
+    // Xóa class rolling sau khi animation kết thúc
+    setTimeout(() => {
+        dice1.classList.remove('rolling');
+        dice2.classList.remove('rolling');
+        
+        // Tiếp tục xử lý logic game ở đây
+    }, 1000); // 1000ms = thời gian của animation
+}
+
+// Cập nhật event listener cho nút Roll
+document.getElementById('rollDice').addEventListener('click', roll);
+
+// Cập nhật hàm placeBet
+async function placeDoubleDiceBet(type) {
+    const betAmount = document.getElementById('doubleDiceBetAmount');
+    if (!betAmount || !betAmount.value) {
+        console.error('Bet amount input not found or empty');
+        return;
+    }
+    
+    const amount = parseInt(betAmount.value);
+
+    // Validation
+    if (amount > balance) {
+        alert('Không đủ số dư!');
+        return;
+    }
+
+    if (amount < 1 || amount > 100000) {
+        alert('Số tiền cược phải từ 1 đến 100000!');
+        return;
+    }
+
+    // Cập nhật số dư
+    const updated = await updateBalance(-amount);
+    if (!updated) return;
+
+    // Rest of the function...
+}
+
+// Cập nhật hàm addToHistory
+function addToDoubleDiceHistory(result, won) {
+    const historyList = document.getElementById('doubleDiceHistory');
+    if (!historyList) return;
+    
+    const betAmount = document.getElementById('doubleDiceBetAmount');
+    if (!betAmount || !betAmount.value) return;
+    
+    const historyItem = document.createElement('div');
+    historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
+    historyItem.textContent = result;
+    
+    // Thêm vào đầu danh sách
+    if (historyList.firstChild) {
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    } else {
+        historyList.appendChild(historyItem);
+    }
+    
+    // Giới hạn số lượng item trong history
+    while (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Animation cho history item
+    setTimeout(() => {
+        historyItem.style.opacity = '1';
+        historyItem.style.transform = 'translateY(0)';
+    }, 50);
+}

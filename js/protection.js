@@ -154,4 +154,39 @@
         GameProtection.initProtection();
         GameProtection.obfuscateGames();
     });
+})();
+
+// Anti-debug và anti-devtools
+(function() {
+    setInterval(() => {
+        const start = performance.now();
+        debugger;
+        const end = performance.now();
+        if (end - start > 100) {
+            window.location.href = '/error.html';
+        }
+    }, 1000);
+
+    // Vô hiệu hóa right-click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Vô hiệu hóa phím tắt dev tools
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || // Ctrl+Shift+I
+            (e.ctrlKey && e.shiftKey && e.keyCode == 74) || // Ctrl+Shift+J
+            (e.keyCode == 123)) { // F12
+            e.preventDefault();
+        }
+    });
+
+    // Phát hiện dev tools
+    let devtools = function() {};
+    devtools.toString = function() {
+        window.location.href = '/error.html';
+    }
+    console.log('%c', devtools);
+
+    // Chống copy source
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
 })(); 

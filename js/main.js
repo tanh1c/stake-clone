@@ -1,11 +1,77 @@
-let token; // Khai báo là biến toàn cục
-
 document.addEventListener('DOMContentLoaded', async () => {
+    // Lấy token từ localStorage
     token = localStorage.getItem('token');
+    
     if (!token) {
         window.location.href = 'auth.html';
         return;
     }
+
+    // Xử lý mobile menu
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 200);
+    });
+
+    // Xử lý bet amount inputs
+    const betInputs = document.querySelectorAll('input[type="number"][id$="BetAmount"]');
+    
+    betInputs.forEach(input => {
+        input.setAttribute('min', '1');
+        input.setAttribute('max', '100000');
+        input.setAttribute('step', '1');
+        
+        // Đặt giá trị mặc định
+        if (!input.value) {
+            input.value = 10;
+        }
+        
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            let value = parseInt(this.value);
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+            } else if (value > 100000) {
+                this.value = 100000;
+            }
+        });
+
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+            pastedText = pastedText.replace(/[^0-9]/g, '');
+            let value = parseInt(pastedText);
+            if (!isNaN(value)) {
+                if (value < 1) value = 1;
+                if (value > 100000) value = 100000;
+                this.value = value;
+            }
+        });
+
+        input.addEventListener('blur', function() {
+            if (this.value === '' || parseInt(this.value) < 1) {
+                this.value = 1;
+            }
+        });
+    });
 
     // Kiểm tra và hiển thị game được chọn trước khi load balance
     const games = {
@@ -141,6 +207,42 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Touch event handling
+    function handleTouchEvents() {
+        const gameControls = document.querySelectorAll('.game-controls button');
+        
+        gameControls.forEach(button => {
+            button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                button.classList.add('touch-active');
+            });
+            
+            button.addEventListener('touchend', () => {
+                button.classList.remove('touch-active');
+            });
+        });
+    }
+
+    // Call after DOM loaded
+    document.addEventListener('DOMContentLoaded', handleTouchEvents);
+
+    async function handleApiRequest(url, options) {
+        try {
+            const response = await fetch(url, options);
+            
+            if(response.status === 429) { // Rate limit status
+                const retryAfter = response.headers.get('Retry-After');
+                console.log(`Rate limited. Try again in ${retryAfter} seconds`);
+                // Có thể thêm thông báo cho user
+                return;
+            }
+            
+            return await response.json();
+        } catch(error) {
+            console.error('API request failed:', error);
+        }
+    }
 });
 
 // API functions
@@ -191,64 +293,4 @@ async function addGameHistory(gameData) {
         },
         body: JSON.stringify(gameData)
     });
-}
-
-// Mobile menu handling
-const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-const sidebar = document.querySelector('.sidebar');
-
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('active');
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-            sidebar.classList.remove('active');
-        }
-    });
-}
-
-// Handle orientation change
-window.addEventListener('orientationchange', () => {
-    setTimeout(() => {
-        window.scrollTo(0, 0);
-    }, 200);
-});
-
-// Touch event handling
-function handleTouchEvents() {
-    const gameControls = document.querySelectorAll('.game-controls button');
-    
-    gameControls.forEach(button => {
-        button.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            button.classList.add('touch-active');
-        });
-        
-        button.addEventListener('touchend', () => {
-            button.classList.remove('touch-active');
-        });
-    });
-}
-
-// Call after DOM loaded
-document.addEventListener('DOMContentLoaded', handleTouchEvents);
-
-async function handleApiRequest(url, options) {
-    try {
-        const response = await fetch(url, options);
-        
-        if(response.status === 429) { // Rate limit status
-            const retryAfter = response.headers.get('Retry-After');
-            console.log(`Rate limited. Try again in ${retryAfter} seconds`);
-            // Có thể thêm thông báo cho user
-            return;
-        }
-        
-        return await response.json();
-    } catch(error) {
-        console.error('API request failed:', error);
-    }
 } 

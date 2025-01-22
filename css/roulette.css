@@ -1,0 +1,171 @@
+.roulette-game {
+    display: flex;
+    gap: 20px;
+}
+
+/* Controls bên trái */
+.roulette-left-panel {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.roulette-controls {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.roulette-controls .bet-amount {
+    margin-bottom: 15px;
+}
+
+.roulette-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.roulette-controls input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.roulette-controls .bet-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.roulette-controls .bet-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.roulette-controls .bet-buttons button:hover {
+    background: #3A4754;
+    transform: translateY(-2px);
+}
+
+/* Your Bets Display */
+.current-bets-display {
+    background: rgba(26, 36, 45, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.current-bets-display h3 {
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.bets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bet-item {
+    background: #2A3744;
+    padding: 8px 12px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.bet-item .bet-type {
+    color: #00FF7F;
+}
+
+.bet-item .bet-amount {
+    color: #ffffff;
+}
+
+.bet-item.red {
+    border-left: 3px solid #FF4444;
+}
+
+.bet-item.black {
+    border-left: 3px solid #333;
+}
+
+.bet-item.other {
+    border-left: 3px solid #00FF7F;
+}
+
+/* Game container bên phải */
+.roulette-game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Các style khác cho game */
+.roulette-result {
+    margin-bottom: 20px;
+}
+
+.betting-board {
+    margin-bottom: 20px;
+}
+
+.roulette-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.roulette-button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.spin-button {
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    color: #000;
+}
+
+.clear-button {
+    background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%);
+    color: #fff;
+}
+
+.roulette-button:hover {
+    transform: translateY(-2px);
+}
+
+@keyframes betAdded {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.bet-item {
+    animation: betAdded 0.3s ease-out;
+} 

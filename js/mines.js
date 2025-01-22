@@ -255,3 +255,59 @@ function cleanupAnimations() {
     document.querySelector('.mines-game').classList.remove('win-flash', 'lose-flash');
     document.getElementById('minesGrid').classList.remove('shake');
 }
+
+// Cập nhật hàm placeBet
+async function placeBet() {
+    const betAmount = document.getElementById('minesBetAmount');
+    if (!betAmount || !betAmount.value) {
+        console.error('Bet amount input not found or empty');
+        return;
+    }
+    
+    const amount = parseInt(betAmount.value);
+    const minesCount = parseInt(document.getElementById('minesCount').value);
+
+    // Validation
+    if (amount > balance) {
+        alert('Không đủ số dư!');
+        return;
+    }
+
+    if (amount < 1 || amount > 100000) {
+        alert('Số tiền cược phải từ 1 đến 100000!');
+        return;
+    }
+
+    // Rest of the function...
+}
+
+// Cập nhật hàm addToHistory
+function addToHistory(result, won) {
+    const historyList = document.getElementById('minesHistory');
+    if (!historyList) return;
+    
+    const betAmount = document.getElementById('minesBetAmount');
+    if (!betAmount || !betAmount.value) return;
+    
+    const historyItem = document.createElement('div');
+    historyItem.className = `history-item ${won ? 'win' : 'lose'}`;
+    historyItem.textContent = result.toFixed(2);
+    
+    // Thêm vào đầu danh sách
+    if (historyList.firstChild) {
+        historyList.insertBefore(historyItem, historyList.firstChild);
+    } else {
+        historyList.appendChild(historyItem);
+    }
+    
+    // Giới hạn số lượng item trong history
+    while (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Animation cho history item
+    setTimeout(() => {
+        historyItem.style.opacity = '1';
+        historyItem.style.transform = 'translateY(0)';
+    }, 50);
+}

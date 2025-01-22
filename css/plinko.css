@@ -3,6 +3,8 @@
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    gap: 20px;
 }
 
 .plinko-controls {
@@ -12,6 +14,56 @@
     margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
+    width: 300px;
+    flex-shrink: 0;
+    height: fit-content;
+}
+
+.plinko-controls .bet-amount {
+    margin-bottom: 15px;
+}
+
+.plinko-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.plinko-controls input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.plinko-controls .bet-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.plinko-controls .bet-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #2A3744;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.plinko-controls .bet-buttons button:hover {
+    background: #3A4754;
+    transform: translateY(-2px);
+}
+
+.plinko-game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .plinko-board {
@@ -24,6 +76,7 @@
     margin-bottom: 80px;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.1);
+    min-height: 600px;
 }
 
 #plinkoCanvas {
@@ -304,4 +357,49 @@
 /* Thêm hiệu ứng glow cho pins */
 .pin {
     filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+}
+
+/* Thêm style cho nút Drop Ball trong controls */
+.plinko-controls .plinko-buttons {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.plinko-controls .plinko-buttons button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #00FF7F 0%, #00CC6A 100%);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,255,127,0.2);
+}
+
+.plinko-controls .plinko-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,255,127,0.3);
+}
+
+.plinko-controls .plinko-buttons button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.plinko-controls .plinko-buttons .button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.plinko-controls .plinko-buttons .button-text i {
+    font-size: 14px;
 }

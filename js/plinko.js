@@ -112,13 +112,28 @@ const PlinkoGame = {
     },
     
     dropBall() {
-        const betAmount = parseFloat(document.getElementById('plinkoBetAmount').value);
-        if (betAmount > balance) {
-            alert('Insufficient balance!');
+        const betAmount = document.getElementById('plinkoBetAmount');
+        if (!betAmount || !betAmount.value) {
+            console.error('Bet amount input not found or empty');
             return;
         }
         
-        updateBalance(-betAmount);
+        const amount = parseInt(betAmount.value);
+        const riskLevel = document.getElementById('plinkoRisk').value;
+        const rows = parseInt(document.getElementById('plinkoRows').value);
+
+        // Validation
+        if (amount > balance) {
+            alert('Không đủ số dư!');
+            return;
+        }
+
+        if (amount < 1 || amount > 100000) {
+            alert('Số tiền cược phải từ 1 đến 100000!');
+            return;
+        }
+        
+        updateBalance(-amount);
         
         // Luôn thả bóng từ vị trí giữa
         const centerX = this.width / 2;
@@ -131,7 +146,7 @@ const PlinkoGame = {
             vx: 0, // Vận tốc ngang ban đầu = 0
             vy: 2,
             speed: 2,
-            betAmount: betAmount
+            betAmount: amount
         });
     },
     
