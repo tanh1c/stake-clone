@@ -6,8 +6,8 @@ const PlinkoGame = {
     pins: [],
     balls: [],
     pinSize: 3,
-    ballSize: 5,
-    rows: 16,
+    ballSize: 10,
+    rows: 12,
     multipliers: [],
     
     init() {
