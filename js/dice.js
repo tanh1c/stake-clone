@@ -172,6 +172,7 @@ async function rollDice() {
     const betAmount = document.getElementById('diceBetAmount');
     if (!betAmount || !betAmount.value) {
         console.error('Bet amount input not found or empty');
+        stopAutoBet();
         return;
     }
     
@@ -197,34 +198,29 @@ async function rollDice() {
     // Animate roll
     animateRoll(1000, result);
     
-    const rollResult = document.getElementById('rollResult');
-    
     setTimeout(async () => {
         if (won) {
             const multiplier = parseFloat(calculateMultiplier(winChance));
             const winAmount = amount * multiplier;
             const profit = winAmount - amount;
             const updated = await updateBalance(profit);
-            if (!updated) return;
-            updateStats(true, amount, profit);
-            
-            // Xử lý auto bet khi thắng
-            if (isAutoBetting) {
-                handleAutoBetResult(true);
+            if (!updated) {
+                stopAutoBet();
+                return;
             }
+            updateStats(true, amount, profit);
         } else {
             const updated = await updateBalance(-amount);
-            if (!updated) return;
-            updateStats(false, amount, -amount);
-            
-            // Xử lý auto bet khi thua
-            if (isAutoBetting) {
-                handleAutoBetResult(false);
+            if (!updated) {
+                stopAutoBet();
+                return;
             }
+            updateStats(false, amount, -amount);
         }
         
         addToHistory(result, won);
         
+        // Nếu đang auto bet, tiếp tục roll sau 1 giây
         if (isAutoBetting) {
             setTimeout(rollDice, 1000);
         }
@@ -247,15 +243,26 @@ function maxBet() {
 }
 
 // Auto bet functions
-function startAutoBet() {
-    isAutoBetting = true;
-    originalBetAmount = parseFloat(document.getElementById('betAmount').value);
-    autoBetCount = 0;
-    rollDice();
+function toggleAutoBet() {
+    const autoBetButton = document.getElementById('autoBet');
+    isAutoBetting = !isAutoBetting;
+    
+    if (isAutoBetting) {
+        // Bắt đầu auto bet
+        autoBetButton.textContent = 'Stop Auto';
+        autoBetButton.classList.add('active');
+        rollDice(); // Roll lần đầu ngay lập tức
+    } else {
+        // Dừng auto bet
+        stopAutoBet();
+    }
 }
 
 function stopAutoBet() {
     isAutoBetting = false;
+    const autoBetButton = document.getElementById('autoBet');
+    autoBetButton.textContent = 'Auto Bet';
+    autoBetButton.classList.remove('active');
 }
 
 // Event Listeners
@@ -267,13 +274,7 @@ document.getElementById('winChance').addEventListener('input', function(e) {
     }
 });
 
-document.getElementById('autoBet').addEventListener('change', function(e) {
-    if (e.target.checked) {
-        startAutoBet();
-    } else {
-        stopAutoBet();
-    }
-});
+document.getElementById('autoBet').addEventListener('click', toggleAutoBet);
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
@@ -441,5 +442,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching balance:', error);
         window.location.href = 'auth.html';
         return;
+    }
+});
+
+// Thêm event listener cho nút auto bet
+document.addEventListener('DOMContentLoaded', () => {
+    const autoBetButton = document.getElementById('autoBet');
+    if (autoBetButton) {
+        autoBetButton.addEventListener('click', toggleAutoBet);
     }
 }); 

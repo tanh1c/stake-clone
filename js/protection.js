@@ -156,37 +156,201 @@
     });
 })();
 
-// Anti-debug và anti-devtools
+// Anti-debug và anti-devtools protection
 (function() {
-    setInterval(() => {
-        const start = performance.now();
-        debugger;
-        const end = performance.now();
-        if (end - start > 100) {
-            window.location.href = '/error.html';
+    const GameProtection = {
+        originalScripts: {},
+        checksumInterval: null,
+
+        // Khởi tạo protection
+        init() {
+            this.saveOriginalScripts();
+            this.initDevToolsDetection();
+            this.initScriptProtection();
+            this.initEventListeners();
+        },
+
+        // Lưu trữ nội dung gốc của scripts
+        saveOriginalScripts() {
+            const scripts = document.getElementsByTagName('script');
+            for (let script of scripts) {
+                if (script.src) {
+                    fetch(script.src)
+                        .then(response => response.text())
+                        .then(content => {
+                            this.originalScripts[script.src] = this.generateChecksum(content);
+                        });
+                }
+            }
+        },
+
+        // Tạo checksum cho script content
+        generateChecksum(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash;
+        },
+
+        // Kiểm tra sự thay đổi của scripts
+        checkScriptIntegrity() {
+            const scripts = document.getElementsByTagName('script');
+            for (let script of scripts) {
+                if (script.src && this.originalScripts[script.src]) {
+                    fetch(script.src)
+                        .then(response => response.text())
+                        .then(content => {
+                            const currentChecksum = this.generateChecksum(content);
+                            if (currentChecksum !== this.originalScripts[script.src]) {
+                                this.handleTampering();
+                            }
+                        });
+                }
+            }
+        },
+
+        // Cập nhật phát hiện dev tools cho cả MacOS
+        initDevToolsDetection() {
+            const threshold = 160;
+            let devtools = { isOpen: false, orientation: undefined };
+
+            // Phát hiện qua kích thước cửa sổ
+            setInterval(() => {
+                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                
+                if (widthThreshold || heightThreshold) {
+                    if (!devtools.isOpen) {
+                        devtools.isOpen = true;
+                        devtools.orientation = widthThreshold ? 'vertical' : 'horizontal';
+                        this.handleDevToolsOpen();
+                    }
+                }
+            }, 500);
+
+            // Phát hiện thông qua console.log
+            const detectDevTools = () => {
+                const date = new Date();
+                debugger;
+                return date.getTime() - date.getTime() > 100;
+            };
+
+            // Kiểm tra định kỳ
+            setInterval(() => {
+                if (detectDevTools()) {
+                    this.handleDevToolsOpen();
+                }
+            }, 1000);
+
+            // Phát hiện Firebug
+            if (window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) {
+                this.handleDevToolsOpen();
+            }
+
+            // Phát hiện __REACT_DEVTOOLS_GLOBAL_HOOK__
+            if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+                this.handleDevToolsOpen();
+            }
+        },
+
+        // Bảo vệ script execution
+        initScriptProtection() {
+            // Override eval
+            const originalEval = window.eval;
+            window.eval = (...args) => {
+                this.handleTampering();
+                return originalEval.apply(window, args);
+            };
+
+            // Chặn new Function
+            const originalFunction = window.Function;
+            window.Function = (...args) => {
+                this.handleTampering();
+                return originalFunction.apply(window, args);
+            };
+        },
+
+        // Cập nhật event listeners cho cả MacOS
+        initEventListeners() {
+            // Chặn right-click
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Chặn phím tắt dev tools cho cả Windows và MacOS
+            document.addEventListener('keydown', e => {
+                // Windows shortcuts
+                if ((e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+                    (e.keyCode === 123)) { // F12
+                    e.preventDefault();
+                    this.handleDevToolsOpen();
+                }
+
+                // MacOS shortcuts
+                if ((e.metaKey && e.altKey && e.keyCode === 73) || // Cmd+Alt+I
+                    (e.metaKey && e.altKey && e.keyCode === 74) || // Cmd+Alt+J
+                    (e.metaKey && e.altKey && e.keyCode === 67) || // Cmd+Alt+C
+                    (e.metaKey && e.shiftKey && e.keyCode === 67)) { // Cmd+Shift+C
+                    e.preventDefault();
+                    this.handleDevToolsOpen();
+                }
+            });
+
+            // Chặn copy/paste
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('paste', e => e.preventDefault());
+
+            // Chặn Command + R (MacOS reload)
+            document.addEventListener('keydown', e => {
+                if (e.metaKey && e.keyCode === 82) {
+                    e.preventDefault();
+                }
+            });
+        },
+
+        // Thêm phát hiện Safari Web Inspector
+        detectSafariDevTools() {
+            try {
+                if (window.localStorage.getItem('devtools')) {
+                    this.handleDevToolsOpen();
+                }
+            } catch (e) {
+                // Safari private mode throws error
+                this.handleDevToolsOpen();
+            }
+        },
+
+        // Xử lý khi phát hiện dev tools
+        handleDevToolsOpen() {
+            this.clearPage();
+            this.redirectToError();
+        },
+
+        // Xử lý khi phát hiện chỉnh sửa script
+        handleTampering() {
+            this.clearPage();
+            this.redirectToError();
+        },
+
+        // Xóa nội dung trang
+        clearPage() {
+            document.documentElement.innerHTML = '';
+            localStorage.clear();
+            sessionStorage.clear();
+        },
+
+        // Chuyển hướng đến trang error
+        redirectToError() {
+            history.pushState(null, '', 'error.html');
+            window.addEventListener('popstate', () => {
+                history.pushState(null, '', 'error.html');
+            });
+            window.location.replace('error.html');
         }
-    }, 1000);
+    };
 
-    // Vô hiệu hóa right-click
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // Vô hiệu hóa phím tắt dev tools
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || // Ctrl+Shift+I
-            (e.ctrlKey && e.shiftKey && e.keyCode == 74) || // Ctrl+Shift+J
-            (e.keyCode == 123)) { // F12
-            e.preventDefault();
-        }
-    });
-
-    // Phát hiện dev tools
-    let devtools = function() {};
-    devtools.toString = function() {
-        window.location.href = '/error.html';
-    }
-    console.log('%c', devtools);
-
-    // Chống copy source
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('copy', e => e.preventDefault());
+    // Khởi tạo protection
+    GameProtection.init();
 })(); 
